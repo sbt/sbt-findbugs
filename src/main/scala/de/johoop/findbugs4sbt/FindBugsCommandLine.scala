@@ -16,7 +16,7 @@ import sbt.DefaultProject
 trait FindBugsCommandLine extends DefaultProject 
     with FindBugsProperties
     with FindBugsDependencies
-    with FindBugsFileFilters {
+    with FindBugsFilters {
       
   private[findbugs4sbt] lazy val findbugsCommandLine = 
       findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments

@@ -13,15 +13,9 @@ package de.johoop.findbugs4sbt
 
 import org.specs.Specification
 
-import sbt.Path
-
 class FindBugsPropertiesSpec extends Specification {
 
   "The default FindBugs properties" should {
-    abstract class DefaultProperties extends FindBugsProperties {
-      override val findbugsOutputPath = sbt.Path.fromFile(".")
-      protected def check() : Boolean
-    }
 
     "have xml as default report type" in {
       new DefaultProperties() {

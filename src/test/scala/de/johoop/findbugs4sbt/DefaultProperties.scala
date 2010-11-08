@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010 Joachim Hofer
+ * Copyright (c) 2009, 2010 Joachim Hofer
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -9,10 +9,12 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-import sbt._
+package de.johoop.findbugs4sbt
 
-class Project(info: ProjectInfo) extends PluginProject(info) {
-  lazy val specs = "org.scala-tools.testing" % "specs" % "1.6.2.1" % "test"
-  lazy val mockito = "org.mockito" % "mockito-all" % "1.8.4" % "test"
+import sbt.Path
+
+abstract class DefaultProperties extends FindBugsProperties {
+  override val findbugsOutputPath = sbt.Path.fromFile(".")
+  protected def check() : Boolean
 }
 

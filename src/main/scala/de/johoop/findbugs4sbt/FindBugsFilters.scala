@@ -16,7 +16,7 @@ import scala.xml.XML
 
 import sbt.DefaultProject
 
-private[findbugs4sbt] trait FindBugsFileFilters extends DefaultProject with FindBugsProperties {
+private[findbugs4sbt] trait FindBugsFilters extends DefaultProject with FindBugsProperties {
   
   private[findbugs4sbt] def addFilterFiles(options: List[String]) = 
       addIncludeFilterFile(addExcludeFilterFile(options))
