@@ -28,37 +28,37 @@ class FindBugsFiltersSpec extends Specification with Mockito {
     trait DefaultFilters extends FindBugsFilters {
       override val findbugsOutputPath = sbt.Path.fromFile("./target")
     }
-    
+
     lazy val projectInfo = new ProjectInfo(new File("./target"), Nil, None)(mock[Logger], mock[AppProvider], None)
-    
+
     "in the default case, not add any include filter options" in {
       val findbugsFilters = new DefaultProject(projectInfo) with DefaultFilters
       findbugsFilters.addFilterFiles(Nil) must beEmpty
     }
-    
+
     "for a project with include filters" in {
       val findbugsFilters = new DefaultProject(projectInfo) with DefaultFilters {
         override lazy val findbugsIncludeFilters = Some(<someIncludeFilters />) 
       }
-      
+
       "add two options" in {
         findbugsFilters.addFilterFiles(Nil) must haveSize(2)
       }
-      
+
       "the first of which has to be '-include'" in {
         findbugsFilters.addFilterFiles(Nil).head mustEqual("-include")
       }
-      
+
       "the second of which has to be a file that contains the correct XML content" in {
         XML.loadFile(findbugsFilters.addFilterFiles(Nil).tail.head) must equalIgnoreSpace(<someIncludeFilters />)
       }
     }
-    
+
     "for a project with exclude filters" in {
       val findbugsFilters = new DefaultProject(projectInfo) with DefaultFilters {
         override lazy val findbugsExcludeFilters = Some(<someExcludeFilters />)
       }
-      
+
       "add two options" in {
         findbugsFilters.addFilterFiles(Nil) must haveSize(2)
       }
@@ -66,18 +66,18 @@ class FindBugsFiltersSpec extends Specification with Mockito {
       "the first of which has to be '-exclude'" in {
         findbugsFilters.addFilterFiles(Nil).head mustEqual("-exclude")
       }
-      
+
       "the second of which has to be a file that contains the correct XML content" in {
         XML.loadFile(findbugsFilters.addFilterFiles(Nil).tail.head) must equalIgnoreSpace(<someExcludeFilters />)
       }
     }
-    
+
     "for a project with include and exclude filters" in {
       val findbugsFilters = new DefaultProject(projectInfo) with DefaultFilters {
         override lazy val findbugsIncludeFilters = Some(<someIncludeFilters />) 
         override lazy val findbugsExcludeFilters = Some(<someExcludeFilters />)
       }
-      
+
       "add four options" in {
         findbugsFilters.addFilterFiles(Nil) must haveSize(4)
       }
@@ -85,21 +85,19 @@ class FindBugsFiltersSpec extends Specification with Mockito {
       "the first of which has to be '-include'" in {
         findbugsFilters.addFilterFiles(Nil).head mustEqual("-include")
       }
-      
+
       "the second of which has to be a file that contains the correct XML content" in {
         XML.loadFile(findbugsFilters.addFilterFiles(Nil).tail.head) must equalIgnoreSpace(<someIncludeFilters />)
       }
-      
+
       "the third of which has to be '-exclude'" in {
         findbugsFilters.addFilterFiles(Nil).tail.tail.head mustEqual("-exclude")
       }
-      
+
       "the fourth of which has to be a file that contains the correct XML content" in {
         XML.loadFile(findbugsFilters.addFilterFiles(Nil).last) must equalIgnoreSpace(<someExcludeFilters />)
       }
     }
   }
-  
-  
 }
 

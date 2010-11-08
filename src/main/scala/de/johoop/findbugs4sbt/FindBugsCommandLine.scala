@@ -41,6 +41,6 @@ trait FindBugsCommandLine extends DefaultProject
       
   private lazy val findbugsCallArguments = List(mainCompilePath.toString)
   
-  private def addSortByClassParameter(commandLine: List[String]) = 
-      commandLine ++ ((if (findbugsSortReportByClassNames) "-sortByClass" else "") :: Nil)
+  private def addSortByClassParameter(options: List[String]) = 
+      options ++ ((if (findbugsSortReportByClassNames) "-sortByClass" else "") :: Nil)
 }
