@@ -19,7 +19,7 @@ import sbt.DefaultProject
 private[findbugs4sbt] trait FindBugsFilters extends DefaultProject with FindBugsProperties {
   
   private[findbugs4sbt] def addFilterFiles(options: List[String]) = 
-      addIncludeFilterFile(addExcludeFilterFile(options))
+      addExcludeFilterFile(addIncludeFilterFile(options))
       
   private def addIncludeFilterFile(options: List[String]) = 
       addFilterFile(options, findbugsIncludeFilters, "include")
