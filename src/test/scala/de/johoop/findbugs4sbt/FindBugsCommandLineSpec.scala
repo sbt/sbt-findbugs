@@ -26,7 +26,7 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
 
   "The FindBugs filter options" should {
     trait DefaultCommandLine extends FindBugsCommandLine {
-      override val findbugsOutputPath = sbt.Path.fromFile("./target")
+      override val findbugsOutputPath = sbt.Path.fromFile("./target/scala_2.7.7/test-resources")
     }
 
     lazy val projectInfo = new ProjectInfo(new File("."), Nil, None)(mock[Logger], mock[AppProvider], None)
@@ -39,8 +39,31 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
       List("-nested:true", "-xml", "-medium") foreach { option =>
         "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
       }
-        
-      List("-sortByClass", "-include", "-exclude") foreach { option =>       
+
+      List("-sortByClass", "-include", "-exclude", "-high", "-low", "-relaxed", "-html") foreach { option =>       
+        "not contain '%s'".format(option) in (commandLine.findbugsCallOptions must notContain(option))
+      }
+    }
+
+    """in the case of being configured as fancy html (htmlReport.html), with high effort, 
+        not nested, sorted by class, containing exclude filters""" in {
+      val reportName = "htmlReport.html"
+      val commandLine = new DefaultProject(projectInfo) with DefaultCommandLine {
+        override lazy val findbugsReportType = FindBugsReportType.FancyHtml
+        override lazy val findbugsReportName = reportName
+        override lazy val findbugsEffort = FindBugsEffort.High
+        override lazy val findbugsAnalyzeNestedArchives = false
+        override lazy val findbugsSortReportByClassNames = true
+        override lazy val findbugsExcludeFilters = Some(<excludeFilters />)
+      }
+
+      "contain '%s'".format(reportName) in (commandLine.findbugsCallOptions must containMatch(reportName))
+
+      List("-html:fancy.xsl", "-high", "-sortByClass", "-exclude") foreach { option =>
+        "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
+      }
+
+      List("-include", "-medium", "-low", "-relaxed", "-html") foreach { option =>       
         "not contain '%s'".format(option) in (commandLine.findbugsCallOptions must notContain(option))
       }
     }
