@@ -14,6 +14,9 @@ package de.johoop.findbugs4sbt
 import sbt.DefaultProject
 
 private[findbugs4sbt] trait FindBugsDependencies extends DefaultProject {
+  
+  final lazy val findbugsConfig = config("findbugs") hide
+  
   val findBugsDependency = "com.google.code.findbugs" % "findbugs" % "1.3.9" % "findbugs->default" intransitive()
   val asmFB = "asm" % "asm" % "3.1" % "findbugs->default" intransitive()
   val asmCommonsFB = "asm" % "asm-commons" % "3.1" % "findbugs->default" intransitive()
