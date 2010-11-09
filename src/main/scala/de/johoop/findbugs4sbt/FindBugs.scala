@@ -30,7 +30,8 @@ trait FindBugs extends DefaultProject
   /** Override this in order to change the behaviour of the findbugs task. */
   protected def findbugsAction = task {
     createDirectory(findbugsOutputPath, log)
-    executeCommandLine(findbugsCommandLine)
+    val commandLine = findbugsCommandLine() 
+    executeCommandLine(commandLine)
   } dependsOn(compile)
 }
 

@@ -17,9 +17,9 @@ trait FindBugsCommandLine extends DefaultProject
     with FindBugsProperties
     with FindBugsDependencies
     with FindBugsFilters {
-      
-  private[findbugs4sbt] lazy val findbugsCommandLine = 
-      findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
+
+  private[findbugs4sbt] def findbugsCommandLine() = 
+      findbugsJavaCall ++ findbugsCallOptions() ++ findbugsCallArguments
 
   private[findbugs4sbt] lazy val findbugsJavaCall = {
     val findbugsLibPath = configurationPath(findbugsConfig)
@@ -28,8 +28,8 @@ trait FindBugsCommandLine extends DefaultProject
     List("java", "-Xmx%dm".format(findbugsMaxMemoryInMB),
         "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
   }
-  
-  private[findbugs4sbt] lazy val findbugsCallOptions = {
+
+  private[findbugs4sbt] def findbugsCallOptions() = {
     val reportFile = findbugsOutputPath / findbugsReportName
     val auxClasspath = compileClasspath.absString
     
@@ -38,9 +38,10 @@ trait FindBugsCommandLine extends DefaultProject
         "-nested:%s".format(findbugsAnalyzeNestedArchives.toString),
         "-auxclasspath", auxClasspath, findbugsEffort.toString)))
   }
-      
+
   private lazy val findbugsCallArguments = List(mainCompilePath.toString)
-  
+
   private def addSortByClassParameter(options: List[String]) = 
-      options ++ ((if (findbugsSortReportByClassNames) "-sortByClass" else "") :: Nil)
+      options ++ (if (findbugsSortReportByClassNames) "-sortByClass" :: Nil else Nil)
 }
+

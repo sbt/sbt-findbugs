@@ -36,7 +36,7 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
         "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
       }
 
-      List("-sortByClass", "-include", "-exclude", "-high", "-low", "-relaxed", "-html") foreach { option =>       
+      List("-sortByClass", "-include", "-exclude", "-high", "-low", "-relaxed", "-html", "") foreach { option =>
         "not contain '%s'".format(option) in (commandLine.findbugsCallOptions must notContain(option))
       }
     }
@@ -59,7 +59,7 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
         "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
       }
 
-      List("-include", "-medium", "-low", "-relaxed", "-html") foreach { option =>       
+      List("-include", "-medium", "-low", "-relaxed", "-html", "") foreach { option =>
         "not contain '%s'".format(option) in (commandLine.findbugsCallOptions must notContain(option))
       }
     }
