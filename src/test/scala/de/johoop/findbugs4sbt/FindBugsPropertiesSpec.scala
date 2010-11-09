@@ -64,6 +64,12 @@ class FindBugsPropertiesSpec extends Specification {
         override def check = findbugsExcludeFilters must beNone
       }.check()
     }
+    
+    "not define any 'onlyAnalyze' filters" in {
+      new DefaultPropertiesWithCheck() {
+        override def check = findbugsOnlyAnalyze must beNone
+      }.check()
+    }
   }
 }
 

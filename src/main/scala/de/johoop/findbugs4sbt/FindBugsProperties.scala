@@ -15,6 +15,7 @@ import java.io.File
 import scala.xml.Node
 
 import sbt.Path
+import sbt.PathFinder
 
 trait FindBugsProperties {
 
@@ -30,6 +31,9 @@ trait FindBugsProperties {
   /** Effort to put into the static analysis. Defaults to <code>ReportType.Medium</code>.*/
   protected lazy val findbugsEffort = FindBugsEffort.Medium
 
+  /** Optionally, define which packages/classes should be analyzed */
+  protected lazy val findbugsOnlyAnalyze : Option[Iterable[String]] = None
+  
   /** Maximum amount of memory to allow for FindBugs (in MB). */
   protected lazy val findbugsMaxMemoryInMB = 1024
 
