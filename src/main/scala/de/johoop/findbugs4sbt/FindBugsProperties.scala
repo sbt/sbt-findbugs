@@ -46,5 +46,8 @@ trait FindBugsProperties {
   /** Optional filter file XML content defining which bug instances to exclude in the static analysis. 
     * Defaults to <code>None</code>. */ 
   protected lazy val findbugsExcludeFilters : Option[Node] = None
+
+  /** The path to the classes to be analyzed. Defaults to <code>mainCompilePath</code>. */
+  protected val findbugsAnalyzedPath: Path
 }
 

@@ -24,6 +24,7 @@ trait FindBugs extends DefaultProject
     with FindBugsCommandLine {
 
   override lazy val findbugsOutputPath = outputPath / "findbugs"
+  override lazy val findbugsAnalyzedPath = mainCompilePath
 
   final lazy val findbugs = findbugsAction
 

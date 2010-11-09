@@ -18,49 +18,49 @@ class FindBugsPropertiesSpec extends Specification {
   "The default FindBugs properties" should {
 
     "have xml as default report type" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsReportType mustEqual(FindBugsReportType.Xml)
       }.check()
     }
 
     "have 'findbugs.xml' as default report name" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsReportName mustEqual("findbugs.xml")
       }.check()
     }
     
     "undertake a medium analysis effort" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsEffort mustEqual(FindBugsEffort.Medium)
       }.check()
     }
 
     "allocate 1 GB by default" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsMaxMemoryInMB mustEqual(1024)
       }.check()
     }
     
     "analyze nested archives by default" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsAnalyzeNestedArchives must beTrue
       }.check()
     }
 
     "not sort the report by class names by default" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsSortReportByClassNames must beFalse
       }.check()
     }
 
     "not have any include filters specified by default" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsIncludeFilters must beNone
       }.check()
     }
 
     "not have any exclude filters specified by default" in {
-      new DefaultProperties() {
+      new DefaultPropertiesWithCheck() {
         override def check = findbugsExcludeFilters must beNone
       }.check()
     }
