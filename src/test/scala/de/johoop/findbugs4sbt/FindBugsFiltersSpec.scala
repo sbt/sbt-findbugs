@@ -25,10 +25,6 @@ import xsbti.AppProvider
 class FindBugsFiltersSpec extends Specification with Mockito {
 
   "The FindBugs filter options" should {
-    trait DefaultFilters extends FindBugsFilters {
-      override val findbugsOutputPath = sbt.Path.fromFile("./target/scala_2.7.7/test-resources")
-    }
-
     lazy val projectInfo = new ProjectInfo(new File("."), Nil, None)(mock[Logger], mock[AppProvider], None)
 
     "in the default case, not add any include filter options" in {

@@ -12,9 +12,17 @@
 package de.johoop.findbugs4sbt
 
 import sbt.Path
+import java.io.File
 
 abstract class DefaultProperties extends FindBugsProperties {
-  override val findbugsOutputPath = sbt.Path.fromFile(".")
+  override val findbugsOutputPath = Path.fromFile(".")
   protected def check() : Boolean
 }
 
+trait DefaultFilters extends FindBugsFilters {
+  val testResourcesDirectory = new File("./target/scala_2.7.7/test-resources")
+  testResourcesDirectory.mkdirs()
+  override val findbugsOutputPath = Path.fromFile(testResourcesDirectory)
+}
+
+trait DefaultCommandLine extends DefaultFilters with FindBugsCommandLine
