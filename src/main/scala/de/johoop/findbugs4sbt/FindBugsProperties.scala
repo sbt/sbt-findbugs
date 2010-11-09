@@ -32,7 +32,7 @@ trait FindBugsProperties {
   protected lazy val findbugsEffort = FindBugsEffort.Medium
 
   /** Optionally, define which packages/classes should be analyzed */
-  protected lazy val findbugsOnlyAnalyze : Option[Iterable[String]] = None
+  protected lazy val findbugsOnlyAnalyze : Option[List[String]] = None
   
   /** Maximum amount of memory to allow for FindBugs (in MB). */
   protected lazy val findbugsMaxMemoryInMB = 1024

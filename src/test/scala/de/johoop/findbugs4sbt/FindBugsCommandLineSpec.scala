@@ -36,13 +36,15 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
         "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
       }
 
-      List("-sortByClass", "-include", "-exclude", "-high", "-low", "-relaxed", "-html", "") foreach { option =>
+      val notContained =
+          List("-sortByClass", "-include", "-exclude", "-high", "-low", "-relaxed", "-html", "", "-onlyAnalyze")
+      notContained foreach { option =>
         "not contain '%s'".format(option) in (commandLine.findbugsCallOptions must notContain(option))
       }
     }
 
-    """in the case of being configured as fancy html (htmlReport.html), with high effort, 
-        not nested, sorted by class, containing exclude filters""" in {
+    "in the case of being configured as fancy html (htmlReport.html), with high effort, " +
+        "not nested, sorted by class, containing exclude filters" in {
       val reportName = "htmlReport.html"
       val commandLine = new DefaultProject(projectInfo) with DefaultCommandLine {
         override lazy val findbugsReportType = FindBugsReportType.FancyHtml
@@ -51,11 +53,15 @@ class FindBugsCommandLineSpec extends Specification with Mockito {
         override lazy val findbugsAnalyzeNestedArchives = false
         override lazy val findbugsSortReportByClassNames = true
         override lazy val findbugsExcludeFilters = Some(<excludeFilters />)
+        override lazy val findbugsOnlyAnalyze = Some(List("de.johoop.*", "org.eclipse.WorldConqueror"))
       }
 
       "contain '%s'".format(reportName) in (commandLine.findbugsCallOptions must containMatch(reportName))
 
-      List("-html:fancy.xsl", "-high", "-sortByClass", "-exclude") foreach { option =>
+      val contained = List(
+          "-html:fancy.xsl", "-high", "-sortByClass", "-exclude",
+          "-onlyAnalyze", "de.johoop.*,org.eclipse.WorldConqueror")
+      contained foreach { option =>
         "contain '%s'".format(option) in (commandLine.findbugsCallOptions must contain(option))
       }
 

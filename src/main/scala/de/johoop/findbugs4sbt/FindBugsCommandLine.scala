@@ -33,15 +33,21 @@ trait FindBugsCommandLine extends DefaultProject
     val reportFile = findbugsOutputPath / findbugsReportName
     val auxClasspath = compileClasspath.absString
     
-    addSortByClassParameter(addFilterFiles(List(
+    addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(List(
         findbugsReportType.toString, "-output", reportFile.toString,
         "-nested:%s".format(findbugsAnalyzeNestedArchives.toString),
-        "-auxclasspath", auxClasspath, findbugsEffort.toString)))
+        "-auxclasspath", auxClasspath, findbugsEffort.toString))))
   }
 
   private lazy val findbugsCallArguments = List(mainCompilePath.toString)
 
   private def addSortByClassParameter(options: List[String]) = 
       options ++ (if (findbugsSortReportByClassNames) "-sortByClass" :: Nil else Nil)
+
+  private def addOnlyAnalyzeParameter(options: List[String]) = findbugsOnlyAnalyze match {
+    case None => options
+    case Some(Nil) => options
+    case Some(packagesAndClasses) => options ++ List("-onlyAnalyze", packagesAndClasses mkString ",")
+  }
 }
 
