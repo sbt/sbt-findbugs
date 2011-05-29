@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010 Joachim Hofer
+ * Copyright (c) 2010, 2011 Joachim Hofer
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -12,27 +12,30 @@
 package de.johoop.findbugs4sbt
 
 import sbt._
-import FileUtilities._
-
-import scala.xml._
+import Keys._
 
 import java.io.File
 
-trait FindBugs extends DefaultProject
-    with CommandLineExecutor
-    with FindBugsProperties
-    with FindBugsCommandLine {
+object FindBugs extends Plugin with Settings with Dependencies {
 
-  override lazy val findbugsOutputPath = outputPath / "findbugs"
-  override lazy val findbugsAnalyzedPath = mainCompilePath
+  override lazy val settings = Seq(commands += findbugsCommand)
 
-  final lazy val findbugs = findbugsAction
+  lazy val findbugsCommand = Command.command("findbugs") { (state: State) =>
+    val extracted = Project.extract(state)
+    import extracted._
 
-  /** Override this in order to change the behaviour of the findbugs task. */
-  protected def findbugsAction = task {
-    createDirectory(findbugsOutputPath, log)
-    val commandLine = findbugsCommandLine() 
-    executeCommandLine(commandLine)
-  } dependsOn(compile)
+    println("Hi, FindBugs!")
+    IO.createDirectory(findbugsTargetPath in currentRef get structure.data get)
+
+    state
+  }
+ 
+//  override lazy val findbugsAnalyzedPath = mainCompilePath
+
+//  protected def findbugsAction = task {
+//    createDirectory(findbugsOutputPath, log)
+//    val commandLine = findbugsCommandLine() 
+//    executeCommandLine(commandLine)
+//  } dependsOn(compile)
 }
 
