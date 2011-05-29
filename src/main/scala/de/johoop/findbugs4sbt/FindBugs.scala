@@ -29,7 +29,7 @@ object FindBugs extends Plugin with Settings with Dependencies {
     
     IO.createDirectory(findbugsTargetPath in currentRef get structure.data get)
 
-    val debugMe = findbugsAnalyzedPath in currentRef get structure.data get
+    val debugMe = findbugsAnalyzedPath in (currentRef, Compile) get structure.data get
     
     logger(state).info(debugMe.toString)
     

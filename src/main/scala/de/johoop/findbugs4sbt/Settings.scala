@@ -18,6 +18,7 @@ import ReportType._
 import Effort._
 
 import scala.xml.Node
+import java.io.File
 
 private[findbugs4sbt] trait Settings extends Plugin {
   
@@ -54,7 +55,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
    val findbugsExcludeFilters = SettingKey[Node]("findbugs-exclude-filter")
 
   /** The path to the classes to be analyzed. Defaults to <code>mainCompilePath</code>. */
-  val findbugsAnalyzedPath = SettingKey[PathFinder]("findbugs-analyzed-path")
+  val findbugsAnalyzedPath = SettingKey[File]("findbugs-analyzed-path")
   
   val findbugsSettings = Seq(
     findbugsTargetPath <<= (target) { _ / "findbugs" },
@@ -64,7 +65,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
-    findbugsAnalyzedPath <<= (classDirectory in Compile) { cd => cd }
+    findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] }
   )
 }
 
