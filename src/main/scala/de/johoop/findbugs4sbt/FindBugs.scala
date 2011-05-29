@@ -19,8 +19,11 @@ import java.io.File
 
 object FindBugs extends Plugin with Settings with Dependencies {
 
-  override lazy val settings = Seq(commands += findbugsCommand)
-
+  override def findbugsTask(streams: TaskStreams): Unit = {
+    streams.log.info("findbugs task executed")
+  }
+  
+  // FIXME it should be a task, not a command
   lazy val findbugsCommand = Command.command("findbugs") { (state: State) =>
     val extracted = Project.extract(state)
     import extracted._

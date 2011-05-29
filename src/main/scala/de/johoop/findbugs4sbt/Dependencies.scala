@@ -17,7 +17,7 @@ private[findbugs4sbt] trait Dependencies extends Plugin {
   
   final lazy val findbugsConfig = config("findbugs") hide
   
-  val findbugs = "com.google.code.findbugs" % "findbugs" % "1.3.9" % "findbugs->default" intransitive()
+  val findbugsDependency = "com.google.code.findbugs" % "findbugs" % "1.3.9" % "findbugs->default" intransitive()
   val asm = "asm" % "asm" % "3.1" % "findbugs->default" intransitive()
   val asmCommons = "asm" % "asm-commons" % "3.1" % "findbugs->default" intransitive()
   val asmTree = "asm" % "asm-tree" % "3.1" % "findbugs->default" intransitive()

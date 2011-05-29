@@ -21,6 +21,8 @@ import scala.xml.Node
 import java.io.File
 
 private[findbugs4sbt] trait Settings extends Plugin {
+
+  val findbugs = TaskKey[Unit]("findbugs")
   
   /** Output path for FindBugs reports. Defaults to <code>target / "findBugs"</code>. */
   val findbugsTargetPath = SettingKey[File]("findbugs-target-path")
@@ -58,6 +60,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsAnalyzedPath = SettingKey[File]("findbugs-analyzed-path")
   
   val findbugsSettings = Seq(
+    findbugs <<= streams map findbugsTask,
     findbugsTargetPath <<= (target) { _ / "findbugs" },
     findbugsReportType := ReportType.Xml,
     findbugsEffort := Effort.Medium,
@@ -67,5 +70,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsSortReportByClassNames := false,
     findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] }
   )
+  
+  def findbugsTask(streams: TaskStreams): Unit
 }
 
