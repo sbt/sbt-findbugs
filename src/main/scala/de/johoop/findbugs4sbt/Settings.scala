@@ -54,13 +54,14 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   /** Optional filter file XML content defining which bug instances to exclude in the static analysis. 
     * Not defined by default. */ 
-   val findbugsExcludeFilters = SettingKey[Node]("findbugs-exclude-filter")
+  val findbugsExcludeFilters = SettingKey[Node]("findbugs-exclude-filter")
 
   /** The path to the classes to be analyzed. Defaults to <code>mainCompilePath</code>. */
   val findbugsAnalyzedPath = SettingKey[File]("findbugs-analyzed-path")
-  
+
   val findbugsSettings = Seq(
-    findbugs <<= streams map findbugsTask,
+    findbugs <<= (findbugsTargetPath, streams) map (findbugsTask(_, _)),
+    findbugs <<= findbugs.dependsOn(compile in Compile),
     findbugsTargetPath <<= (target) { _ / "findbugs" },
     findbugsReportType := ReportType.Xml,
     findbugsEffort := Effort.Medium,
@@ -71,6 +72,6 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] }
   )
   
-  def findbugsTask(streams: TaskStreams): Unit
+  def findbugsTask(findbugsTargetPath: File, streams: TaskStreams): Unit
 }
 

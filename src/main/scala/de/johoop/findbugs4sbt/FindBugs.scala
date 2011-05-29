@@ -19,8 +19,9 @@ import java.io.File
 
 object FindBugs extends Plugin with Settings with Dependencies {
 
-  override def findbugsTask(streams: TaskStreams): Unit = {
+  override def findbugsTask(findbugsTargetPath: File, streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
+    streams.log.info(findbugsTargetPath.toString)
   }
   
   // FIXME it should be a task, not a command
@@ -38,7 +39,7 @@ object FindBugs extends Plugin with Settings with Dependencies {
     
     state
   }
- 
+
 //  override lazy val findbugsAnalyzedPath = mainCompilePath
 
 //  protected def findbugsAction = task {
