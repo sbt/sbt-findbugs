@@ -12,7 +12,8 @@
 package de.johoop.findbugs4sbt
 
 import sbt._
-import Keys._
+import sbt.Keys._
+import sbt.CommandSupport.logger
 
 import java.io.File
 
@@ -24,7 +25,8 @@ object FindBugs extends Plugin with Settings with Dependencies {
     val extracted = Project.extract(state)
     import extracted._
 
-    println("Hi, FindBugs!")
+    logger(state).info("Hi, FindBugs!")
+    
     IO.createDirectory(findbugsTargetPath in currentRef get structure.data get)
 
     state
@@ -33,7 +35,6 @@ object FindBugs extends Plugin with Settings with Dependencies {
 //  override lazy val findbugsAnalyzedPath = mainCompilePath
 
 //  protected def findbugsAction = task {
-//    createDirectory(findbugsOutputPath, log)
 //    val commandLine = findbugsCommandLine() 
 //    executeCommandLine(commandLine)
 //  } dependsOn(compile)
