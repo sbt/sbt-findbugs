@@ -24,16 +24,28 @@ import Effort._
 private[findbugs4sbt] trait CommandLine extends Plugin with Settings {
 
   override def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
+    def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
+
+    def findbugsJavaCall = {
+      val findbugsLibPath = "<TODO libPath>" // TODO configurationPath(findbugsConfig)
+      val findbugsClasspath = "<TODO classpath>" // TODO (findbugsLibPath ** "*.jar").absString
+  
+      List("java", "-Xmx%dm".format(misc.maxMemory),
+          "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
+    }
+
+    def findbugsCallArguments = List(paths.analyzedPath.getPath)
+    
     def findbugsCallOptions = {
       val reportFile = paths.targetPath / paths.reportName
-      val auxClasspath = "<TODO>"
+      val auxClasspath = "<TODO auxClasspath>"
       
       addOnlyAnalyzeParameter(addSortByClassParameter( /* TODO addFilterFiles( */ List(
         misc.reportType.toString, "-output", reportFile.toString,
         "-nested:%s".format(misc.analyzeNestedArchives.toString),
         "-auxclasspath", auxClasspath, misc.effort.toString)))
     }
-    
+  
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {
       case None => arguments
       case Some(Nil) => arguments
@@ -48,21 +60,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Settings {
     streams.log.info(paths.analyzedPath.toString)
     IO.createDirectory(paths.targetPath)
     
-    findbugsCallOptions
+    findbugsCommandLine
   }
-/*  
-  private[findbugs4sbt] def findbugsCommandLine() = 
-      findbugsJavaCall ++ findbugsCallOptions() ++ findbugsCallArguments
-
-  private[findbugs4sbt] lazy val findbugsJavaCall = {
-    val findbugsLibPath = configurationPath(findbugsConfig)
-    val findbugsClasspath = (findbugsLibPath ** "*.jar").absString
-
-    List("java", "-Xmx%dm".format(findbugsMaxMemoryInMB),
-        "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
-  }
-
-  private lazy val findbugsCallArguments = List(mainCompilePath.toString)
-  */
 }
 
