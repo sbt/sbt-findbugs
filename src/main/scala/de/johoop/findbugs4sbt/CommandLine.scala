@@ -21,7 +21,7 @@ import java.io.File
 import ReportType._
 import Effort._
 
-private[findbugs4sbt] trait CommandLine extends Plugin with Settings {
+private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
 
   override def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
@@ -38,12 +38,12 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Settings {
     
     def findbugsCallOptions = {
       val reportFile = paths.targetPath / paths.reportName
-      val auxClasspath = "<TODO auxClasspath>"
+      val auxClasspath = "<TODO auxClasspath>" // TODO compileClasspath.absString
       
-      addOnlyAnalyzeParameter(addSortByClassParameter( /* TODO addFilterFiles( */ List(
+      addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(filters, paths.targetPath, List(
         misc.reportType.toString, "-output", reportFile.toString,
         "-nested:%s".format(misc.analyzeNestedArchives.toString),
-        "-auxclasspath", auxClasspath, misc.effort.toString)))
+        "-auxclasspath", auxClasspath, misc.effort.toString))))
     }
   
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {

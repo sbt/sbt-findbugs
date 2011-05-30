@@ -23,7 +23,7 @@ import java.io.File
 
 private[findbugs4sbt] case class PathSettings(targetPath: File, reportName: String, analyzedPath: File)
 
-private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilter: Option[Node])
+private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
 private[findbugs4sbt] case class MiscSettings(
   reportType: ReportType, effort: Effort, 
