@@ -24,34 +24,21 @@ import Effort._
 
 object FindBugs extends Plugin with Settings with Dependencies {
 
-  override def findbugsTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): Unit = {
+  override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
+    streams.log.info(commandLine mkString ",")
+  }
+  
+  override def findbugsCommandLineTaskImpl(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String] = {
+    streams.log.info("findbugsCommandLine task executed")
     streams.log.info(paths.targetPath.toString)
     streams.log.info(paths.analyzedPath.toString)
     IO.createDirectory(paths.targetPath)
+    
+    List("hello", "world")
   }
 
-  // FIXME it should be a task, not a command
-  lazy val findbugsCommand = Command.command("findbugs") { (state: State) =>
-    val extracted = Project.extract(state)
-    import extracted._
-
-    logger(state).info("Hi, FindBugs!")
-    
-    IO.createDirectory(findbugsTargetPath in currentRef get structure.data get)
-
-    val debugMe = findbugsAnalyzedPath in (currentRef, Compile) get structure.data get
-    
-    logger(state).info(debugMe.toString)
-    
-    state
-  }
-
-//  override lazy val findbugsAnalyzedPath = mainCompilePath
-
-//  protected def findbugsAction = task {
 //    val commandLine = findbugsCommandLine() 
 //    executeCommandLine(commandLine)
-//  } dependsOn(compile)
 }
 

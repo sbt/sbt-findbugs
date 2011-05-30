@@ -21,16 +21,20 @@ import Effort._
 import scala.xml.Node
 import java.io.File
 
-case class PathSettings(targetPath: File, reportName: String, analyzedPath: File)
+private[findbugs4sbt] case class PathSettings(targetPath: File, reportName: String, analyzedPath: File)
 
-case class FilterSettings(includeFilters: Option[Node], excludeFilter: Option[Node])
+private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilter: Option[Node])
 
-case class MiscSettings(reportType: ReportType, effort: Effort, onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
+private[findbugs4sbt] case class MiscSettings(
+  reportType: ReportType, effort: Effort, 
+  onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
 
 private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
+
+  val findbugsCommandLine = TaskKey[List[String]]("findbugs-command-line")
   
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
@@ -71,30 +75,37 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = SettingKey[Option[Node]]("findbugs-exclude-filter")
 
-  def findbugsTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): Unit
+  def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
 
-  def filterSettingsTask: Initialize[Task[FilterSettings]] = ( findbugsIncludeFilters, findbugsExcludeFilters) map {
-    (include, exclude) => FilterSettings(include, exclude)
+  def findbugsCommandLineTask: Initialize[Task[List[String]]] = (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map {
+    (paths, filters, misc, streams) => findbugsCommandLineTaskImpl(paths, filters, misc, streams)
   }
   
+  def findbugsCommandLineTaskImpl(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
+  
+  def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
+    (include, exclude) => FilterSettings(include, exclude)
+  }
+
   def pathSettingsTask: Initialize[Task[PathSettings]] = (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map {
     (targetPath, reportName, analyzedPath) => PathSettings(targetPath, reportName, analyzedPath)
   }
-  
+
   def miscSettingsTask: Initialize[Task[MiscSettings]] = (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map { 
     (p1, p2, p3, p4, p5, p6) => MiscSettings(p1, p2, p3, p4, p5, p6)
   }
 
   val findbugsSettings = Seq(
-    findbugs <<= (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsTask,
-    findbugs <<= findbugs.dependsOn(compile in Compile),
+    findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
+    
+    findbugsCommandLine <<= findbugsCommandLineTask,
 
     findbugsPathSettings <<= pathSettingsTask,
     findbugsFilterSettings <<= filterSettingsTask,
     findbugsMiscSettings <<= miscSettingsTask,
-    
+
     findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
-    
+
     findbugsTargetPath <<= (target) { _ / "findbugs" },
     findbugsReportType := ReportType.Xml,
     findbugsEffort := Effort.Medium,
@@ -107,6 +118,5 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsIncludeFilters := None,
     findbugsExcludeFilters := None
   )
-
 }
 
