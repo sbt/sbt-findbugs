@@ -14,14 +14,16 @@ package de.johoop.findbugs4sbt
 import sbt._
 import sbt.Keys.TaskStreams
 
-object FindBugs extends Plugin with CommandLine with Settings with Dependencies {
+object FindBugs extends Plugin 
+    with Settings
+    with Dependencies
+    with CommandLine with CommandLineExecutor {
 
   override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
     streams.log.info(commandLine mkString ",")
+    
+    executeCommandLine(commandLine, streams.log)
   }
-  
-//    val commandLine = findbugsCommandLine() 
-//    executeCommandLine(commandLine)
 }
 
