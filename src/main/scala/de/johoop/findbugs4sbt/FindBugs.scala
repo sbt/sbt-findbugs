@@ -12,32 +12,15 @@
 package de.johoop.findbugs4sbt
 
 import sbt._
-import sbt.Keys._
-import sbt.CommandSupport.logger
+import sbt.Keys.TaskStreams
 
-import scala.xml.Node
-
-import java.io.File
-
-import ReportType._
-import Effort._
-
-object FindBugs extends Plugin with Settings with Dependencies {
+object FindBugs extends Plugin with CommandLine with Settings with Dependencies {
 
   override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
     streams.log.info(commandLine mkString ",")
   }
   
-  override def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String] = {
-    streams.log.info("findbugsCommandLine task executed")
-    streams.log.info(paths.targetPath.toString)
-    streams.log.info(paths.analyzedPath.toString)
-    IO.createDirectory(paths.targetPath)
-    
-    List("hello", "world")
-  }
-
 //    val commandLine = findbugsCommandLine() 
 //    executeCommandLine(commandLine)
 }
