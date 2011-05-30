@@ -26,7 +26,7 @@ private[findbugs4sbt] trait Filters extends Plugin with Settings {
       options ++ (maybeFilters match {
         case Some(filters) => {
           val filterFile = (targetPath / "%sFilterFile.xml".format(kindOfFilter.capitalize)).toString
-          XML.saveFull(filterFile, filters, "UTF-8", false, null)
+          XML.save(filterFile, filters, "UTF-8")
           List("-%s".format(kindOfFilter), filterFile)
         }
         case None => Nil
