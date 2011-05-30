@@ -24,32 +24,7 @@ import Effort._
 
 object FindBugs extends Plugin with Settings with Dependencies {
 
-  val findbugsSettings = Seq(
-    findbugsPathSettings <<= pathSettingsTask,
-    findbugsFilterSettings <<= filterSettingsTask,
-    findbugsMiscSettings <<= miscSettingsTask,
-    
-    findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
-    findbugsFilterSettings <<= findbugsFilterSettings.dependsOn(compile in Compile),
-    findbugsMiscSettings <<= findbugsMiscSettings.dependsOn(compile in Compile),
-    
-    findbugs <<= (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsTask,
-    findbugs <<= findbugs.dependsOn(compile in Compile),
-    
-    findbugsTargetPath <<= (target) { _ / "findbugs" },
-    findbugsReportType := ReportType.Xml,
-    findbugsEffort := Effort.Medium,
-    findbugsReportName := "findbugs.xml",
-    findbugsMaxMemory := 1024,
-    findbugsAnalyzeNestedArchives := true,
-    findbugsSortReportByClassNames := false,
-    findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] },
-    findbugsOnlyAnalyze := None,
-    findbugsIncludeFilters := None,
-    findbugsExcludeFilters := None
-  )
-
-  def findbugsTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): Unit = {
+  override def findbugsTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
     streams.log.info(paths.targetPath.toString)
     streams.log.info(paths.analyzedPath.toString)

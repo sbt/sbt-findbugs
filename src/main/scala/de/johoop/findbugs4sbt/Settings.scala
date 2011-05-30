@@ -71,6 +71,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = SettingKey[Option[Node]]("findbugs-exclude-filter")
 
+  def findbugsTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): Unit
+
   def filterSettingsTask: Initialize[Task[FilterSettings]] = ( findbugsIncludeFilters, findbugsExcludeFilters) map {
     (include, exclude) => FilterSettings(include, exclude)
   }
@@ -82,5 +84,29 @@ private[findbugs4sbt] trait Settings extends Plugin {
   def miscSettingsTask: Initialize[Task[MiscSettings]] = (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map { 
     (p1, p2, p3, p4, p5, p6) => MiscSettings(p1, p2, p3, p4, p5, p6)
   }
+
+  val findbugsSettings = Seq(
+    findbugs <<= (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsTask,
+    findbugs <<= findbugs.dependsOn(compile in Compile),
+
+    findbugsPathSettings <<= pathSettingsTask,
+    findbugsFilterSettings <<= filterSettingsTask,
+    findbugsMiscSettings <<= miscSettingsTask,
+    
+    findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
+    
+    findbugsTargetPath <<= (target) { _ / "findbugs" },
+    findbugsReportType := ReportType.Xml,
+    findbugsEffort := Effort.Medium,
+    findbugsReportName := "findbugs.xml",
+    findbugsMaxMemory := 1024,
+    findbugsAnalyzeNestedArchives := true,
+    findbugsSortReportByClassNames := false,
+    findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] },
+    findbugsOnlyAnalyze := None,
+    findbugsIncludeFilters := None,
+    findbugsExcludeFilters := None
+  )
+
 }
 
