@@ -29,7 +29,7 @@ object FindBugs extends Plugin with Settings with Dependencies {
     streams.log.info(commandLine mkString ",")
   }
   
-  override def findbugsCommandLineTaskImpl(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String] = {
+  override def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String] = {
     streams.log.info("findbugsCommandLine task executed")
     streams.log.info(paths.targetPath.toString)
     streams.log.info(paths.analyzedPath.toString)

@@ -77,11 +77,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
 
-  def findbugsCommandLineTask: Initialize[Task[List[String]]] = (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map {
-    (paths, filters, misc, streams) => findbugsCommandLineTaskImpl(paths, filters, misc, streams)
-  }
-  
-  def findbugsCommandLineTaskImpl(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
+  def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
   
   def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
     (include, exclude) => FilterSettings(include, exclude)
@@ -98,7 +94,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsSettings = Seq(
     findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
     
-    findbugsCommandLine <<= findbugsCommandLineTask,
+    findbugsCommandLine <<= (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
     findbugsPathSettings <<= pathSettingsTask,
     findbugsFilterSettings <<= filterSettingsTask,
