@@ -98,7 +98,7 @@ private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
       
     findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
     
-    findbugsCommandLine <<= (findbugsClasspath, findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
+    findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
     findbugsPathSettings <<= pathSettingsTask,
     findbugsFilterSettings <<= filterSettingsTask,
@@ -106,7 +106,7 @@ private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
 
     findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
 
-    findbugsClasspath <<= (classpathTypes, update) map { 
+    managedClasspath in findbugsCommandLine <<= (classpathTypes, update) map { 
       (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
 
     findbugsTargetPath <<= (target) { _ / "findbugs" },
