@@ -30,7 +30,7 @@ private[findbugs4sbt] case class MiscSettings(
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
 
-private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
+private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
 
@@ -76,26 +76,28 @@ private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = SettingKey[Option[Node]]("findbugs-exclude-filter")
 
-  def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
+  protected def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
 
-  def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+  protected def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
     paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
   
-  def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
+  private def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
     (include, exclude) => FilterSettings(include, exclude)
   }
 
-  def pathSettingsTask: Initialize[Task[PathSettings]] = (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map {
+  private def pathSettingsTask: Initialize[Task[PathSettings]] = (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map {
     (targetPath, reportName, analyzedPath) => PathSettings(targetPath, reportName, analyzedPath)
   }
 
-  def miscSettingsTask: Initialize[Task[MiscSettings]] = (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map { 
+  private def miscSettingsTask: Initialize[Task[MiscSettings]] = (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map { 
     (p1, p2, p3, p4, p5, p6) => MiscSettings(p1, p2, p3, p4, p5, p6)
   }
 
+  private val findbugsConfig = config("findbugs") hide
+  
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
-    libraryDependencies ++= findbugsDependencies,
+    libraryDependencies += "com.google.code.findbugs" % "findbugs" % "1.3.9" % "findbugs->default",
       
     findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
     

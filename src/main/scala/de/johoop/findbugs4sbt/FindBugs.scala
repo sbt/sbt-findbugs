@@ -15,9 +15,7 @@ import sbt._
 import sbt.Keys.TaskStreams
 
 object FindBugs extends Plugin 
-    with Settings
-    with Dependencies
-    with CommandLine with CommandLineExecutor {
+    with Settings with CommandLine with CommandLineExecutor {
 
   override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
     streams.log.info("findbugs task executed")
