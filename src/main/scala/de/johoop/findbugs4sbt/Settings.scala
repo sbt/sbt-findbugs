@@ -78,7 +78,8 @@ private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
 
   def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
 
-  def findbugsCommandLineTask(classpath: Classpath, paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
+  def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+    paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
   
   def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
     (include, exclude) => FilterSettings(include, exclude)
@@ -98,7 +99,8 @@ private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
       
     findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
     
-    findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
+    findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
+      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
     findbugsPathSettings <<= pathSettingsTask,
     findbugsFilterSettings <<= filterSettingsTask,

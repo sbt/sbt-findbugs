@@ -23,22 +23,24 @@ import Effort._
 
 private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
 
-  override def findbugsCommandLineTask(classpath: Classpath, paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
+  override def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
+    
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
     def findbugsJavaCall = {
-      val findbugsClasspath = PathFinder(classpath.files).absString
-      streams.log.debug("FindBugs classpath: %s" format findbugsClasspath)
+      val classpath = commandLineClasspath(findbugsClasspath)
+      streams.log.debug("FindBugs classpath: %s" format classpath)
   
       List("java", "-Xmx%dm".format(misc.maxMemory),
-          "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
+          "-cp", classpath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
     }
 
     def findbugsCallArguments = List(paths.analyzedPath.getPath)
     
     def findbugsCallOptions = {
       val reportFile = paths.targetPath / paths.reportName
-      val auxClasspath = "<TODO auxClasspath>" // TODO compileClasspath.absString
+      val auxClasspath = commandLineClasspath(compileClasspath)
       
       addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(filters, paths.targetPath, List(
         misc.reportType.toString, "-output", reportFile.toString,
@@ -55,6 +57,8 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def addSortByClassParameter(arguments: List[String]) = 
       arguments ++ (if (misc.sortReportByClassNames) "-sortByClass" :: Nil else Nil)
 
+    def commandLineClasspath(classpath: Classpath) = PathFinder(classpath.files).absString
+      
     streams.log.info("findbugsCommandLine task executed")
     streams.log.info(paths.targetPath.toString)
     streams.log.info(paths.analyzedPath.toString)
