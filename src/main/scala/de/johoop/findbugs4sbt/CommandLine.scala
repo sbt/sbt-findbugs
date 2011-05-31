@@ -27,9 +27,8 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
     def findbugsJavaCall = {
-      val findbugsLibPath = classpath
-      val findbugsClasspath = "<TODO classpath>" // TODO (findbugsLibPath ** "*.jar").absString
-      streams.log.info(classpath.toString)
+      val findbugsClasspath = PathFinder(classpath.files).absString
+      streams.log.debug("FindBugs classpath: %s" format findbugsClasspath)
   
       List("java", "-Xmx%dm".format(misc.maxMemory),
           "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
