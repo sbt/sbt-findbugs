@@ -18,8 +18,7 @@ object FindBugs extends Plugin
     with Settings with CommandLine with CommandLineExecutor {
 
   override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
-    streams.log.info("findbugs task executed")
-    streams.log.info(commandLine mkString ",")
+    streams.log.debug("FindBugs command line to execute: \"%s\"" format commandLine mkString " ")
     
     executeCommandLine(commandLine, streams.log)
   }
