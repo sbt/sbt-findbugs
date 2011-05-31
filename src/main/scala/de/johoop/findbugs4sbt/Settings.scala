@@ -30,12 +30,13 @@ private[findbugs4sbt] case class MiscSettings(
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
 
-private[findbugs4sbt] trait Settings extends Plugin {
+private[findbugs4sbt] trait Settings extends Plugin with Dependencies {
 
   val findbugs = TaskKey[Unit]("findbugs")
 
   val findbugsCommandLine = TaskKey[List[String]]("findbugs-command-line")
   
+  val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
   val findbugsMiscSettings = TaskKey[MiscSettings]("findbugs-misc-settings")
@@ -77,7 +78,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
 
-  def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
+  def findbugsCommandLineTask(classpath: Classpath, paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
   
   def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
     (include, exclude) => FilterSettings(include, exclude)
@@ -92,15 +93,21 @@ private[findbugs4sbt] trait Settings extends Plugin {
   }
 
   val findbugsSettings = Seq(
+    ivyConfigurations += findbugsConfig,
+    libraryDependencies ++= findbugsDependencies,
+      
     findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
     
-    findbugsCommandLine <<= (findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
+    findbugsCommandLine <<= (findbugsClasspath, findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
     findbugsPathSettings <<= pathSettingsTask,
     findbugsFilterSettings <<= filterSettingsTask,
     findbugsMiscSettings <<= miscSettingsTask,
 
     findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
+
+    findbugsClasspath <<= (classpathTypes, update) map { 
+      (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
 
     findbugsTargetPath <<= (target) { _ / "findbugs" },
     findbugsReportType := ReportType.Xml,

@@ -23,12 +23,13 @@ import Effort._
 
 private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
 
-  override def findbugsCommandLineTask(paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
+  override def findbugsCommandLineTask(classpath: Classpath, paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams) = {
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
     def findbugsJavaCall = {
-      val findbugsLibPath = "<TODO libPath>" // TODO configurationPath(findbugsConfig)
+      val findbugsLibPath = classpath
       val findbugsClasspath = "<TODO classpath>" // TODO (findbugsLibPath ** "*.jar").absString
+      streams.log.info(classpath.toString)
   
       List("java", "-Xmx%dm".format(misc.maxMemory),
           "-cp", findbugsClasspath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
@@ -54,7 +55,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
 
     def addSortByClassParameter(arguments: List[String]) = 
       arguments ++ (if (misc.sortReportByClassNames) "-sortByClass" :: Nil else Nil)
-    
+
     streams.log.info("findbugsCommandLine task executed")
     streams.log.info(paths.targetPath.toString)
     streams.log.info(paths.analyzedPath.toString)
