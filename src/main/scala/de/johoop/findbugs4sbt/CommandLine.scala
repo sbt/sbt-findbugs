@@ -29,7 +29,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
     def findbugsJavaCall = {
-      val classpath = commandLineClasspath(findbugsClasspath)
+      val classpath = commandLineClasspath(findbugsClasspath.files)
       streams.log.debug("FindBugs classpath: %s" format classpath)
   
       List("java", "-Xmx%dm".format(misc.maxMemory),
@@ -40,7 +40,8 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     
     def findbugsCallOptions = {
       val reportFile = paths.targetPath / paths.reportName
-      val auxClasspath = commandLineClasspath(compileClasspath)
+      val auxClassFiles = compileClasspath.files ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305")) 
+      val auxClasspath = commandLineClasspath(auxClassFiles)
       
       addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(filters, paths.targetPath, List(
         misc.reportType.toString, "-output", reportFile.toString,
@@ -57,7 +58,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def addSortByClassParameter(arguments: List[String]) = 
       arguments ++ (if (misc.sortReportByClassNames) "-sortByClass" :: Nil else Nil)
 
-    def commandLineClasspath(classpath: Classpath) = PathFinder(classpath.files).absString
+    def commandLineClasspath(classpathFiles: Seq[File]) = PathFinder(classpathFiles).absString
       
     streams.log.info("findbugsCommandLine task executed")
     streams.log.info(paths.targetPath.toString)
