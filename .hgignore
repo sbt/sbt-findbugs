@@ -9,3 +9,5 @@ syntax: regexp
 ^lib/
 ^project/boot$
 ^project/target$
+^project/plugins/project$
+^project/plugins/target$
