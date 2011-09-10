@@ -116,7 +116,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     managedClasspath in findbugsCommandLine <<= (classpathTypes, update) map { 
       (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
 
-    findbugsTargetPath <<= (target) { _ / "findbugs" },
+    findbugsTargetPath <<= (crossTarget) { _ / "findbugs" },
     findbugsReportType := ReportType.Xml,
     findbugsEffort := Effort.Medium,
     findbugsReportName := "findbugs.xml",
