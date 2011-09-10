@@ -60,9 +60,9 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
 
     def commandLineClasspath(classpathFiles: Seq[File]) = PathFinder(classpathFiles).absString
       
-    streams.log.info("findbugsCommandLine task executed")
-    streams.log.info(paths.targetPath.toString)
-    streams.log.info(paths.analyzedPath.toString)
+    streams.log.debug("findbugsCommandLine task executed")
+    streams.log.debug(paths.targetPath.toString)
+    streams.log.debug(paths.analyzedPath.toString)
     IO.createDirectory(paths.targetPath)
     
     findbugsCommandLine
