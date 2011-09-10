@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
 	"org.mockito" % "mockito-all" % "1.8.4" % "test"	
 )
 
+publishMavenStyle := true
+
 publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/")
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
