@@ -6,11 +6,6 @@ version := "1.1.2"
 
 sbtPlugin := true
 
-libraryDependencies ++= Seq(
-	"org.scala-tools.testing" % "specs" % "1.6.2.1" % "test",
-	"org.mockito" % "mockito-all" % "1.8.4" % "test"	
-)
-
 publishMavenStyle := true
 
 publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/")
