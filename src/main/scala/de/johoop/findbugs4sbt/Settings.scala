@@ -81,18 +81,6 @@ private[findbugs4sbt] trait Settings extends Plugin {
   protected def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
     paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
   
-  private def filterSettingsTask: Initialize[Task[FilterSettings]] = (findbugsIncludeFilters, findbugsExcludeFilters) map {
-    (include, exclude) => FilterSettings(include, exclude)
-  }
-
-  private def pathSettingsTask: Initialize[Task[PathSettings]] = (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map {
-    (targetPath, reportName, analyzedPath) => PathSettings(targetPath, reportName, analyzedPath)
-  }
-
-  private def miscSettingsTask: Initialize[Task[MiscSettings]] = (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map { 
-    (p1, p2, p3, p4, p5, p6) => MiscSettings(p1, p2, p3, p4, p5, p6)
-  }
-
   private val findbugsConfig = config("findbugs") hide
   
   val findbugsSettings = Seq(
@@ -107,9 +95,10 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
-    findbugsPathSettings <<= pathSettingsTask,
-    findbugsFilterSettings <<= filterSettingsTask,
-    findbugsMiscSettings <<= miscSettingsTask,
+    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map (PathSettings(_, _, _)),
+    findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map (FilterSettings(_, _)),
+    findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
+        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map (MiscSettings(_, _, _, _, _, _)),
 
     findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
 
