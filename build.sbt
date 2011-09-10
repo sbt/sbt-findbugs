@@ -15,4 +15,3 @@ publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/r
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
-seq(ScriptedPlugin.scriptedSettings : _*)
