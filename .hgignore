@@ -1,5 +1,6 @@
 syntax: regexp
 
+^\.target$
 ^\.history$
 ^\.classpath$
 ^\.project$
@@ -12,3 +13,4 @@ syntax: regexp
 ^project/target$
 ^project/plugins/project$
 ^project/plugins/target$
+^project/project/target$
