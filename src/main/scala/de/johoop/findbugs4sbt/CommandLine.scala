@@ -36,17 +36,16 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
           "-cp", classpath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
     }
 
-    def findbugsCallArguments = List(paths.analyzedPath.getPath)
+    def findbugsCallArguments = paths.analyzedPath map (_.getPath)
     
     def findbugsCallOptions = {
       val reportFile = paths.targetPath / paths.reportName
-      val auxClassFiles = compileClasspath.files ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305")) 
-      val auxClasspath = commandLineClasspath(auxClassFiles)
+      val auxClasspath = paths.auxPath ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305")) 
       
       addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(filters, paths.targetPath, List(
         misc.reportType.toString, "-output", reportFile.toString,
-        "-nested:%s".format(misc.analyzeNestedArchives.toString),
-        "-auxclasspath", auxClasspath, misc.effort.toString))))
+        "-nested:%b".format(misc.analyzeNestedArchives),
+        "-auxclasspath", commandLineClasspath(auxClasspath), misc.effort.toString))))
     }
   
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {

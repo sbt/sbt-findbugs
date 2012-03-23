@@ -2,7 +2,7 @@ organization := "de.johoop"
 
 name := "findbugs4sbt"
 
-version := "1.1.4"
+version := "1.1.5"
 
 sbtPlugin := true
 

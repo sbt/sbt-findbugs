@@ -21,7 +21,7 @@ import Effort._
 import scala.xml.Node
 import java.io.File
 
-private[findbugs4sbt] case class PathSettings(targetPath: File, reportName: String, analyzedPath: File)
+private[findbugs4sbt] case class PathSettings(targetPath: File, reportName: String, analyzedPath: Seq[File], auxPath: Seq[File])
 
 private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
@@ -47,8 +47,11 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** Name of the report file to generate. Defaults to <code>"findbugs.xml"</code> */
   val findbugsReportName = SettingKey[String]("findbugs-report-name")
 
-  /** The path to the classes to be analyzed. Defaults to <code>mainCompilePath</code>. */
-  val findbugsAnalyzedPath = SettingKey[File]("findbugs-analyzed-path")
+  /** The path to the classes to be analyzed. Defaults to <code>target / classes</code>. */
+  val findbugsAnalyzedPath = TaskKey[Seq[File]]("findbugs-analyzed-path")
+  
+  /** The path to the classes not to be analyzed but referenced by analyzed ones. Defaults to <code>dependencyClasspath in Compile</code>. */
+  val findbugsAuxiliaryPath = TaskKey[Seq[File]]("findbugs-auxiliary-path")
 
   /** Type of report to create. Defaults to <code>ReportType.Xml</code>. */
   val findbugsReportType = SettingKey[ReportType]("findbugs-report-type")
@@ -95,24 +98,25 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
-    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath) map (PathSettings(_, _, _)),
-    findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map (FilterSettings(_, _)),
+    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings,
+    findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
     findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
-        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map (MiscSettings(_, _, _, _, _, _)),
+        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
 
     findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
 
     managedClasspath in findbugsCommandLine <<= (classpathTypes, update) map { 
       (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
 
-    findbugsTargetPath <<= (crossTarget) { _ / "findbugs" },
+    findbugsTargetPath <<= crossTarget(_ / "findbugs"),
     findbugsReportType := ReportType.Xml,
     findbugsEffort := Effort.Medium,
     findbugsReportName := "findbugs.xml",
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
-    findbugsAnalyzedPath <<= (classDirectory in Compile) { identity[File] },
+    findbugsAnalyzedPath <<= classDirectory in Compile map (f => Seq(f)),
+    findbugsAuxiliaryPath <<= dependencyClasspath in Compile map (_.files),
     findbugsOnlyAnalyze := None,
     findbugsIncludeFilters := None,
     findbugsExcludeFilters := None
