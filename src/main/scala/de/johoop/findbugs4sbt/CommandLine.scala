@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010, 2011 Joachim Hofer
+ * Copyright (c) 2010-2012 Joachim Hofer & contributors
  * All rights reserved.
  *
  * This program and the accompanying materials
