@@ -98,12 +98,10 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
 
-    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings,
+    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
     findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
         findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
-
-    findbugsPathSettings <<= findbugsPathSettings.dependsOn(compile in Compile),
 
     managedClasspath in findbugsCommandLine <<= (classpathTypes, update) map { 
       (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },

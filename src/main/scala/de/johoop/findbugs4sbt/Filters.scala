@@ -18,14 +18,14 @@ import scala.xml.XML
 
 private[findbugs4sbt] trait Filters extends Plugin with Settings {
 
-  private[findbugs4sbt] def addFilterFiles(filters: FilterSettings, targetPath: PathFinder, options: List[String]) = {
+  private[findbugs4sbt] def addFilterFiles(filters: FilterSettings, targetPath: File, options: List[String]) = {
     def addIncludeFilterFile(options: List[String]) = addFilterFile(options, filters.includeFilters, "include")
     def addExcludeFilterFile(options: List[String]) = addFilterFile(options, filters.excludeFilters, "exclude") 
 
     def addFilterFile(options: List[String], maybeFilters: Option[Node], kindOfFilter: String) = {
       options ++ (maybeFilters match {
         case Some(filters) => {
-          val filterFile = (targetPath / "%sFilterFile.xml".format(kindOfFilter.capitalize)).toString
+          val filterFile = (targetPath / "%sFilterFile.xml".format(kindOfFilter.capitalize)).getAbsolutePath
           XML.save(filterFile, filters, "UTF-8")
           List("-%s".format(kindOfFilter), filterFile)
         }
