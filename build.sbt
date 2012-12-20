@@ -1,6 +1,8 @@
-organization := "de.johoop"
+sbtPlugin := true
 
 name := "findbugs4sbt"
+
+organization := "de.johoop"
 
 version := "1.1.7"
 
@@ -8,5 +10,5 @@ resolvers += "Sonatype Release" at "https://oss.sonatype.org/content/repositorie
 
 scalaVersion := "2.10.0"
 
-sbtPlugin := true
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-language:_")
 
