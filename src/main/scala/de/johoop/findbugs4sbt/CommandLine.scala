@@ -32,7 +32,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
       val classpath = commandLineClasspath(findbugsClasspath.files)
       streams.log.debug("FindBugs classpath: %s" format classpath)
   
-      List("java", "-Xmx%dm".format(misc.maxMemory),
+      List("-Xmx%dm".format(misc.maxMemory),
           "-cp", classpath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
     }
 
