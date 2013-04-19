@@ -88,10 +88,9 @@ private[findbugs4sbt] trait Settings extends Plugin {
   
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
-    resolvers += "findbugs" at "http://code.google.com/p/findbugs/source/browse/repos/release-repository",
     libraryDependencies ++= Seq(
-      "com.google.code.findbugs" % "findbugs" % "2.0.2" % "findbugs->default",
-      "com.google.code.findbugs" % "jsr305" % "2.0.2" % "findbugs->default"
+      "com.google.code.findbugs" % "findbugs" % "2.0.1" % "findbugs->default",
+      "com.google.code.findbugs" % "jsr305" % "2.0.1" % "findbugs->default"
     ),
       
     findbugs <<= (findbugsCommandLine, javaHome, streams) map findbugsTask,
