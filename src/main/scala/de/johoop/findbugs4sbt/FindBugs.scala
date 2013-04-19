@@ -17,10 +17,10 @@ import sbt.Keys.TaskStreams
 object FindBugs extends Plugin 
     with Settings with CommandLine with CommandLineExecutor {
 
-  override def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit = {
+  override def findbugsTask(commandLine: List[String], javaHome: Option[File], streams: TaskStreams): Unit = {
     streams.log.debug("FindBugs command line to execute: \"%s\"" format (commandLine mkString " "))
     
-    executeCommandLine(commandLine, streams.log)
+    executeCommandLine(commandLine, javaHome, streams.log)
   }
 }
 

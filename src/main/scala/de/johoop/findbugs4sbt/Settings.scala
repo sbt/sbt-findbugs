@@ -79,7 +79,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = SettingKey[Option[Node]]("findbugs-exclude-filter")
 
-  protected def findbugsTask(commandLine: List[String], streams: TaskStreams): Unit
+  protected def findbugsTask(commandLine: List[String], javaHome: Option[File], streams: TaskStreams): Unit
 
   protected def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
     paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
@@ -88,12 +88,13 @@ private[findbugs4sbt] trait Settings extends Plugin {
   
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
+    resolvers += "findbugs" at "http://code.google.com/p/findbugs/source/browse/repos/release-repository",
     libraryDependencies ++= Seq(
       "com.google.code.findbugs" % "findbugs" % "2.0.2" % "findbugs->default",
       "com.google.code.findbugs" % "jsr305" % "2.0.2" % "findbugs->default"
     ),
       
-    findbugs <<= (findbugsCommandLine, streams) map findbugsTask,
+    findbugs <<= (findbugsCommandLine, javaHome, streams) map findbugsTask,
     
     findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,

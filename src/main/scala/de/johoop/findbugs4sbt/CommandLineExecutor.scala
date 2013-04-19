@@ -14,9 +14,9 @@ package de.johoop.findbugs4sbt
 import sbt._
 
 private[findbugs4sbt] trait CommandLineExecutor {
-  private[findbugs4sbt] def executeCommandLine(commandLine: List[String], log: Logger) = try {
+  private[findbugs4sbt] def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger) = try {
     log.debug(commandLine mkString "\n")
-    val exitValue = Process(commandLine) ! log
+    val exitValue = Fork.java(javaHome, commandLine, log)
     if (exitValue != 0) log.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
     
   } catch {
