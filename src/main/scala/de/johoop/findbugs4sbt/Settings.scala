@@ -73,11 +73,11 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   /** Optional filter file XML content defining which bug instances to include in the static analysis. 
     * <code>None</code> by default. */ 
-  val findbugsIncludeFilters = SettingKey[Option[Node]]("findbugs-include-filter")
+  val findbugsIncludeFilters = TaskKey[Option[Node]]("findbugs-include-filter")
 
   /** Optional filter file XML content defining which bug instances to exclude in the static analysis. 
     * <code>None</code> by default. */ 
-  val findbugsExcludeFilters = SettingKey[Option[Node]]("findbugs-exclude-filter")
+  val findbugsExcludeFilters = TaskKey[Option[Node]]("findbugs-exclude-filter")
 
   protected def findbugsTask(commandLine: List[String], javaHome: Option[File], streams: TaskStreams): Unit
 
