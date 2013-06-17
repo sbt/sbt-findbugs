@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010, 2011 Joachim Hofer
+ * Copyright (c) 2010-2013 Joachim Hofer
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -12,15 +12,19 @@
 package de.johoop.findbugs4sbt
 
 import sbt._
-import sbt.Keys.TaskStreams
+import Keys._
 
 object FindBugs extends Plugin 
     with Settings with CommandLine with CommandLineExecutor {
 
-  override def findbugsTask(commandLine: List[String], javaHome: Option[File], streams: TaskStreams): Unit = {
-    streams.log.debug("FindBugs command line to execute: \"%s\"" format (commandLine mkString " "))
-    
-    executeCommandLine(commandLine, javaHome, streams.log)
+  override def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
+      streams: TaskStreams): Unit = {
+
+    IO.withTemporaryDirectory { filterPath =>
+      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
+      streams.log.debug("FindBugs command line to execute: \"%s\"" format (cmd mkString " "))
+      executeCommandLine(cmd, javaHome, streams.log)
+    }
   }
 }
-

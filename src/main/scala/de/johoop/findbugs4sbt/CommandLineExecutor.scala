@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010 Joachim Hofer
+ * Copyright (c) 2010-2013 Joachim Hofer
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -15,11 +15,10 @@ import sbt._
 
 private[findbugs4sbt] trait CommandLineExecutor {
   private[findbugs4sbt] def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger) = try {
-    log.debug(commandLine mkString "\n")
     val exitValue = Fork.java(javaHome, commandLine, log)
-    if (exitValue != 0) log.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
+    if (exitValue != 0) sys.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
     
   } catch {
-    case e => log.error("Exception while executing FindBugs: %s".format(e.getMessage))
+    case e => sys.error("Exception while executing FindBugs: %s".format(e.getMessage))
   }
 }

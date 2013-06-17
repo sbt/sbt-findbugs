@@ -1,7 +1,7 @@
 /*
  * This file is part of findbugs4sbt.
  * 
- * Copyright (c) 2010-2012 Joachim Hofer & contributors
+ * Copyright (c) 2010-2013 Joachim Hofer & contributors
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -21,12 +21,12 @@ import Effort._
 import scala.xml.Node
 import java.io.File
 
-private[findbugs4sbt] case class PathSettings(targetPath: File, reportName: String, analyzedPath: Seq[File], auxPath: Seq[File])
+private[findbugs4sbt] case class PathSettings(reportPath: Option[File], analyzedPath: Seq[File], auxPath: Seq[File])
 
 private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
 private[findbugs4sbt] case class MiscSettings(
-  reportType: ReportType, effort: Effort, 
+  reportType: Option[ReportType], effort: Effort, 
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
 
@@ -34,18 +34,16 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
 
-  val findbugsCommandLine = TaskKey[List[String]]("findbugs-command-line")
-  
   val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
   val findbugsMiscSettings = TaskKey[MiscSettings]("findbugs-misc-settings")
   
-  /** Output path for FindBugs reports. Defaults to <code>target / "findBugs"</code>. */
-  val findbugsTargetPath = SettingKey[File]("findbugs-target-path")
+  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "report.xml")</code>. */
+  val findbugsReportPath = SettingKey[Option[File]]("findbugs-report-path")
   
   /** Name of the report file to generate. Defaults to <code>"findbugs.xml"</code> */
-  val findbugsReportName = SettingKey[String]("findbugs-report-name")
+  val findbugsReportName = SettingKey[Option[String]]("findbugs-report-name")
 
   /** The path to the classes to be analyzed. Defaults to <code>target / classes</code>. */
   val findbugsAnalyzedPath = TaskKey[Seq[File]]("findbugs-analyzed-path")
@@ -53,8 +51,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** The path to the classes not to be analyzed but referenced by analyzed ones. Defaults to <code>dependencyClasspath in Compile</code>. */
   val findbugsAuxiliaryPath = TaskKey[Seq[File]]("findbugs-auxiliary-path")
 
-  /** Type of report to create. Defaults to <code>ReportType.Xml</code>. */
-  val findbugsReportType = SettingKey[ReportType]("findbugs-report-type")
+  /** Type of report to create. Defaults to <code>Some(ReportType.Xml)</code>. */
+  val findbugsReportType = SettingKey[Option[ReportType]]("findbugs-report-type")
   
   /** Effort to put into the static analysis. Defaults to <code>ReportType.Medium</code>.*/
   val findbugsEffort = SettingKey[Effort]("findbugs-effort")
@@ -79,11 +77,10 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = TaskKey[Option[Node]]("findbugs-exclude-filter")
 
-  protected def findbugsTask(commandLine: List[String], javaHome: Option[File], streams: TaskStreams): Unit
+  protected def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
+      streams: TaskStreams): Unit
 
-  protected def findbugsCommandLineTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
-    paths: PathSettings, filters: FilterSettings, misc: MiscSettings, streams: TaskStreams): List[String]
-  
   private val findbugsConfig = config("findbugs") hide
   
   val findbugsSettings = Seq(
@@ -93,23 +90,20 @@ private[findbugs4sbt] trait Settings extends Plugin {
       "com.google.code.findbugs" % "jsr305" % "2.0.1" % "findbugs->default"
     ),
       
-    findbugs <<= (findbugsCommandLine, javaHome, streams) map findbugsTask,
+    findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
+      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map findbugsTask,
     
-    findbugsCommandLine <<= (managedClasspath in findbugsCommandLine, managedClasspath in Compile, 
-      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, streams) map findbugsCommandLineTask,
-
-    findbugsPathSettings <<= (findbugsTargetPath, findbugsReportName, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
+    findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
     findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
         findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
 
-    managedClasspath in findbugsCommandLine <<= (classpathTypes, update) map { 
+    findbugsClasspath <<= (classpathTypes, update) map { 
       (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
 
-    findbugsTargetPath <<= crossTarget(_ / "findbugs"),
-    findbugsReportType := ReportType.Xml,
+    findbugsReportType := Some(ReportType.Xml),
     findbugsEffort := Effort.Medium,
-    findbugsReportName := "findbugs.xml",
+    findbugsReportPath <<= crossTarget (target => Some(target / "findbugs" / "findbugs.xml")),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
