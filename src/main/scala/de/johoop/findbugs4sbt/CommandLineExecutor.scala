@@ -12,13 +12,16 @@
 package de.johoop.findbugs4sbt
 
 import sbt._
+import scala.util.control.NonFatal
 
 private[findbugs4sbt] trait CommandLineExecutor {
   private[findbugs4sbt] def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger) = try {
-    val exitValue = Fork.java(javaHome, commandLine, log)
+    val exitValue = Fork.java(
+    	ForkOptions(javaHome = javaHome, outputStrategy = Some(new LoggedOutput(log))), 
+    	commandLine)
     if (exitValue != 0) sys.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
     
   } catch {
-    case e => sys.error("Exception while executing FindBugs: %s".format(e.getMessage))
+    case NonFatal(e) => sys.error("Exception while executing FindBugs: %s".format(e.getMessage))
   }
 }

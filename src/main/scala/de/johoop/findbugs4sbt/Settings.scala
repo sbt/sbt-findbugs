@@ -98,17 +98,16 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
         findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
 
-    findbugsClasspath <<= (classpathTypes, update) map { 
-      (ct, updateReport) => Classpaths.managedJars(findbugsConfig, ct, updateReport) },
+    findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
     findbugsReportType := Some(ReportType.Xml),
     findbugsEffort := Effort.Medium,
-    findbugsReportPath <<= crossTarget (target => Some(target / "findbugs" / "findbugs.xml")),
+    findbugsReportPath := Some(crossTarget.value / "findbugs" / "findbugs.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
-    findbugsAnalyzedPath <<= classDirectory in Compile map (f => Seq(f)),
-    findbugsAuxiliaryPath <<= dependencyClasspath in Compile map (_.files),
+    findbugsAnalyzedPath := Seq(classDirectory in Compile value),
+    findbugsAuxiliaryPath := (dependencyClasspath in Compile).value.files,
     findbugsOnlyAnalyze := None,
     findbugsIncludeFilters := None,
     findbugsExcludeFilters := None
