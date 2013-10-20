@@ -1,16 +1,16 @@
 # findbugs4sbt - Static code analysis via FindBugs from within SBT
 
-This SBT plug-in enables you to analyze your (Java) code with the help of the great **[FindBugs](http:*findbugs.sourceforge.net/)** tool. It defines a `findbugs` sbt action for that purpose.
+This SBT plug-in enables you to analyze your (Java) code with the help of the great **[FindBugs](http://findbugs.sourceforge.net/)** tool. It defines a `findbugs` sbt action for that purpose.
 
 Version 1.2.1 of this plug-in is available for SBT 0.13.x.
 
 ## Getting findbugs4sbt
 
-findbugs4sbt is hosted at the [sbt Community Repository](http:*repo.scala-sbt.org/scalasbt/sbt-plugin-releases). This repository is automatically available from within SBT. This means that you just have to add findbugs4sbt as a plug-in to your project (see the next section).
+findbugs4sbt is hosted at the [sbt Community Repository](http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases). This repository is automatically available from within SBT. This means that you just have to add findbugs4sbt as a plug-in to your project (see the next section).
 
 If you want to go bleeding edge, you can also:
 
-    hg clone https:*github.com/sbt/findbugs4sbt.git
+    hg clone https://github.com/sbt/findbugs4sbt.git
     cd findbugs4sbt 
     sbt publish-local
 
