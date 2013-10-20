@@ -18,15 +18,17 @@ If you want to go bleeding edge, you can also:
 
 Add the following to your project's `build.sbt` file:
 
-    ```scala
-    import de.johoop.findbugs4sbt.FindBugs._
+```scala
+import de.johoop.findbugs4sbt.FindBugs._
 
-    findbugsSettings
+findbugsSettings
+```
 
 Also, you have to add the plugin dependency to your project's `./project/plugins.sbt` or the global  `.sbt/plugins/build.sbt`:
 
-    ```scala
-    addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.2.1")
+```scala
+addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.2.1")
+```
 
 The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
 
@@ -36,31 +38,34 @@ The old settings specified below are still mostly valid, but they're now specifi
 
 Just use Scala inline XML for the setting, for example:
 
-    ```scala
-    findbugsIncludeFilters := Some(<FindBugsFilter>
-      <Match>
-        <Class name="de.johoop.Meep" />
-      </Match>
-    </FindBugsFilter>)
+```scala
+findbugsIncludeFilters := Some(<FindBugsFilter>
+  <Match>
+    <Class name="de.johoop.Meep" />
+  </Match>
+</FindBugsFilter>)
+```
 
 ### Using filter files
 
 You can also read the filter settings from files in a more conventional way:
 
-    ```scala
-    findbugsIncludeFilters := Some(baseDirectory.value / "findbugs-include-filters.xml")
+```scala
+findbugsIncludeFilters := Some(baseDirectory.value / "findbugs-include-filters.xml")
+```
 
 Or, when your configuration is zipped and previously published to a local repo:
 
-    ```scala
-    findbugsIncludeFilters := {
-      val configFiles = update.value.select(module = moduleFilter(name = "velvetant-sonar"))
-      val configFile = configFiles.headOption flatMap { zippedFile =>
-        IO.unzip(zippedFile, target.value / "rules") find (_.name contains "velvetant-sonar-findbugs.xml")
-      }
+```scala
+findbugsIncludeFilters := {
+  val configFiles = update.value.select(module = moduleFilter(name = "velvetant-sonar"))
+  val configFile = configFiles.headOption flatMap { zippedFile =>
+    IO.unzip(zippedFile, target.value / "rules") find (_.name contains "velvetant-sonar-findbugs.xml")
+  }
 
-      configFile map scala.xml.XML.loadFile orElse sys.error("unable to find config file in update report")
-    }
+  configFile map scala.xml.XML.loadFile orElse sys.error("unable to find config file in update report")
+}
+```
 
 ## Settings
 
