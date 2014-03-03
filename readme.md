@@ -10,7 +10,7 @@ findbugs4sbt is hosted at the [sbt Community Repository](http://repo.scala-sbt.o
 
 If you want to go bleeding edge, you can also:
 
-    hg clone https://github.com/sbt/findbugs4sbt.git
+    git clone https://github.com/sbt/findbugs4sbt.git
     cd findbugs4sbt 
     sbt publish-local
 
@@ -80,7 +80,7 @@ findbugsIncludeFilters := {
 ### `findbugsReportPath`
 * *Description:* Target path of the report file to generate (optional).
 * *Accepts:* any legal file path
-* *Default:* `Some(crossTarget / "findbugs" / "report.xml"`
+* *Default:* `Some(crossTarget.value / "findbugs" / "findbugs.xml")`
 
 ### `findbugsEffort`
 * *Description:* Effort to put into the static analysis.

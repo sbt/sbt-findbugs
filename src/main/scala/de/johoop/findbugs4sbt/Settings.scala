@@ -39,7 +39,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
   val findbugsMiscSettings = TaskKey[MiscSettings]("findbugs-misc-settings")
   
-  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "report.xml")</code>. */
+  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "findbugs.xml")</code>. */
   val findbugsReportPath = SettingKey[Option[File]]("findbugs-report-path")
   
   /** Name of the report file to generate. Defaults to <code>"findbugs.xml"</code> */
