@@ -87,6 +87,11 @@ findbugsIncludeFilters := {
 * *Accepts:* `Priority.{Relaxed, Low, Medium, High}`
 * *Default:* `Priority.Medium`
 
+### `findbugsEffort`
+* *Description:* Decide how much effort to put into analysis.
+* *Accepts:* `Effort.{Minimum, Default, Maximum}`
+* *Default:* `Effort.Default`
+
 ### `findbugsOnlyAnalyze`
 * *Description:* Optionally, define which packages/classes should be analyzed.
 * *Accepts:* An option containing a `List[String]` of packages and classes.

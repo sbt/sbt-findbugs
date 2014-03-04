@@ -17,6 +17,7 @@ import Project.Initialize
 
 import ReportType._
 import Priority._
+import Effort._
 
 import scala.xml.Node
 import java.io.File
@@ -28,7 +29,8 @@ private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], ex
 private[findbugs4sbt] case class MiscSettings(
   reportType: Option[ReportType], priority: Priority, 
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
-  analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
+  analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean,
+  effort: Effort)
 
 private[findbugs4sbt] trait Settings extends Plugin {
 
@@ -56,6 +58,9 @@ private[findbugs4sbt] trait Settings extends Plugin {
   
   /** Priority of bugs shown. Defaults to <code>Priority.Medium</code>. */
   val findbugsPriority = SettingKey[Priority]("findbugs-priority")
+
+  /** Effort put into bug finding. Defaults to <code>Effort.Default</code> */
+  val findbugsEffort = SettingKey[Effort]("findbugs-effort")
   
   /** Optionally, define which packages/classes should be analyzed (<code>None</code> by default) */
   val findbugsOnlyAnalyze = SettingKey[Option[Seq[String]]]("findbugs-only-analyze")
@@ -96,12 +101,13 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
     findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
-        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
+        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort) map MiscSettings,
 
     findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
     findbugsReportType := Some(ReportType.Xml),
     findbugsPriority := Priority.Medium,
+    findbugsEffort := Effort.Default,
     findbugsReportPath := Some(crossTarget.value / "findbugs" / "findbugs.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
