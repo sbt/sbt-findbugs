@@ -19,7 +19,7 @@ import scala.xml.Node
 import java.io.File
 
 import ReportType._
-import Effort._
+import Priority._
 
 private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
 
@@ -48,7 +48,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
         misc.reportType.map(`type` => List(`type`.toString)).getOrElse(Nil) ++
         paths.reportPath.map(path => List("-output", path.absolutePath)).getOrElse(Nil) ++ List(
           "-nested:%b".format(misc.analyzeNestedArchives),
-          "-auxclasspath", commandLineClasspath(auxClasspath), misc.effort.toString))))
+          "-auxclasspath", commandLineClasspath(auxClasspath), misc.priority.toString))))
     }
   
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {

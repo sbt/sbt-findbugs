@@ -16,7 +16,7 @@ import Keys._
 import Project.Initialize
 
 import ReportType._
-import Effort._
+import Priority._
 
 import scala.xml.Node
 import java.io.File
@@ -26,7 +26,7 @@ private[findbugs4sbt] case class PathSettings(reportPath: Option[File], analyzed
 private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
 private[findbugs4sbt] case class MiscSettings(
-  reportType: Option[ReportType], effort: Effort, 
+  reportType: Option[ReportType], priority: Priority, 
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
 
@@ -54,8 +54,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** Type of report to create. Defaults to <code>Some(ReportType.Xml)</code>. */
   val findbugsReportType = SettingKey[Option[ReportType]]("findbugs-report-type")
   
-  /** Effort to put into the static analysis. Defaults to <code>ReportType.Medium</code>.*/
-  val findbugsEffort = SettingKey[Effort]("findbugs-effort")
+  /** Priority of bugs shown. Defaults to <code>Priority.Medium</code>. */
+  val findbugsPriority = SettingKey[Priority]("findbugs-priority")
   
   /** Optionally, define which packages/classes should be analyzed (<code>None</code> by default) */
   val findbugsOnlyAnalyze = SettingKey[Option[Seq[String]]]("findbugs-only-analyze")
@@ -95,13 +95,13 @@ private[findbugs4sbt] trait Settings extends Plugin {
     
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
-    findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
+    findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
         findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
 
     findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
     findbugsReportType := Some(ReportType.Xml),
-    findbugsEffort := Effort.Medium,
+    findbugsPriority := Priority.Medium,
     findbugsReportPath := Some(crossTarget.value / "findbugs" / "findbugs.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,

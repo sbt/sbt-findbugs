@@ -82,10 +82,10 @@ findbugsIncludeFilters := {
 * *Accepts:* any legal file path
 * *Default:* `Some(crossTarget.value / "findbugs" / "findbugs.xml")`
 
-### `findbugsEffort`
-* *Description:* Effort to put into the static analysis.
-* *Accepts:* `ReportType.{Relaxed, Low, Medium, High}`
-* *Default:* `ReportType.Medium`
+### `findbugsPriority`
+* *Description:* Suppress reporting of bugs based on priority.
+* *Accepts:* `Priority.{Relaxed, Low, Medium, High}`
+* *Default:* `Priority.Medium`
 
 ### `findbugsOnlyAnalyze`
 * *Description:* Optionally, define which packages/classes should be analyzed.

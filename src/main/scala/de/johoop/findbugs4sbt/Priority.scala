@@ -11,8 +11,8 @@
  */
 package de.johoop.findbugs4sbt
 
-object Effort extends Enumeration {
-  type Effort = Value
+object Priority extends Enumeration {
+  type Priority = Value
 
   val Relaxed = Value("-relaxed")
   val Low = Value("-low")
