@@ -11,12 +11,25 @@
  */
 package de.johoop.findbugs4sbt
 
-object Priority extends Enumeration {
-  type Priority = Value
+object Priority {
 
-  val Relaxed = Value("-relaxed")
-  val Low = Value("-low")
-  val Medium = Value("-medium")
-  val High = Value("-high")
+  sealed abstract class Priority
+
+  case object Relaxed extends Priority {
+    override def toString = "-relaxed"
+  }
+
+  case object Low extends Priority {
+    override def toString = "-low"
+  }
+
+  case object Medium extends Priority {
+    override def toString = "-medium"
+  }
+
+  case object High extends Priority {
+    override def toString = "-high"
+  }
+
 }
 
