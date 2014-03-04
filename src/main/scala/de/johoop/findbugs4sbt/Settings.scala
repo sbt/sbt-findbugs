@@ -44,9 +44,6 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "findbugs.xml")</code>. */
   val findbugsReportPath = SettingKey[Option[File]]("findbugs-report-path")
   
-  /** Name of the report file to generate. Defaults to <code>"findbugs.xml"</code> */
-  val findbugsReportName = SettingKey[Option[String]]("findbugs-report-name")
-
   /** The path to the classes to be analyzed. Defaults to <code>target / classes</code>. */
   val findbugsAnalyzedPath = TaskKey[Seq[File]]("findbugs-analyzed-path")
   
