@@ -105,7 +105,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsReportType := Some(ReportType.Xml),
     findbugsPriority := Priority.Medium,
     findbugsEffort := Effort.Default,
-    findbugsReportPath := Some(crossTarget.value / "findbugs" / "findbugs.xml"),
+    findbugsReportPath := Some(crossTarget.value / "findbugs" / "report.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,

@@ -80,7 +80,7 @@ findbugsIncludeFilters := {
 ### `findbugsReportPath`
 * *Description:* Target path of the report file to generate (optional).
 * *Accepts:* any legal file path
-* *Default:* `Some(crossTarget.value / "findbugs" / "findbugs.xml")`
+* *Default:* `Some(crossTarget.value / "findbugs" / "report.xml")`
 
 ### `findbugsPriority`
 * *Description:* Suppress reporting of bugs based on priority.
