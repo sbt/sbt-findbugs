@@ -129,7 +129,7 @@ findbugsIncludeFilters := {
 
 ## Contributors
 
-Thanks to @asflierl and @anishathalye for their contributions!
+Thanks to [@asflierl](http://github.com/asflierl) and [@anishathalye](http://github.com/anishathalye) for their contributions!
 
 ## License
 
