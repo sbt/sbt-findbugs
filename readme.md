@@ -127,9 +127,13 @@ findbugsIncludeFilters := {
 * *Accepts:* any `sbt.Path`
 * *Default:* `mainCompilePath`
 
+## Contributors
+
+Thanks to @asflierl and @anishathalye for their contributions!
+
 ## License
 
-Copyright (c) 2011 - 2013 Joachim Hofer & contributors
+Copyright (c) 2011 - 2014 Joachim Hofer & contributors
 
 All rights reserved.
 
