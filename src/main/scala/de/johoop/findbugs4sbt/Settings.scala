@@ -16,6 +16,7 @@ import Keys._
 import Project.Initialize
 
 import ReportType._
+import Priority._
 import Effort._
 
 import scala.xml.Node
@@ -26,9 +27,10 @@ private[findbugs4sbt] case class PathSettings(reportPath: Option[File], analyzed
 private[findbugs4sbt] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
 private[findbugs4sbt] case class MiscSettings(
-  reportType: Option[ReportType], effort: Effort, 
+  reportType: Option[ReportType], priority: Priority, 
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
-  analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean)
+  analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean,
+  effort: Effort)
 
 private[findbugs4sbt] trait Settings extends Plugin {
 
@@ -39,12 +41,9 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
   val findbugsMiscSettings = TaskKey[MiscSettings]("findbugs-misc-settings")
   
-  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "report.xml")</code>. */
+  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "findbugs.xml")</code>. */
   val findbugsReportPath = SettingKey[Option[File]]("findbugs-report-path")
   
-  /** Name of the report file to generate. Defaults to <code>"findbugs.xml"</code> */
-  val findbugsReportName = SettingKey[Option[String]]("findbugs-report-name")
-
   /** The path to the classes to be analyzed. Defaults to <code>target / classes</code>. */
   val findbugsAnalyzedPath = TaskKey[Seq[File]]("findbugs-analyzed-path")
   
@@ -54,7 +53,10 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** Type of report to create. Defaults to <code>Some(ReportType.Xml)</code>. */
   val findbugsReportType = SettingKey[Option[ReportType]]("findbugs-report-type")
   
-  /** Effort to put into the static analysis. Defaults to <code>ReportType.Medium</code>.*/
+  /** Priority of bugs shown. Defaults to <code>Priority.Medium</code>. */
+  val findbugsPriority = SettingKey[Priority]("findbugs-priority")
+
+  /** Effort put into bug finding. Defaults to <code>Effort.Default</code> */
   val findbugsEffort = SettingKey[Effort]("findbugs-effort")
   
   /** Optionally, define which packages/classes should be analyzed (<code>None</code> by default) */
@@ -86,8 +88,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
     libraryDependencies ++= Seq(
-      "com.google.code.findbugs" % "findbugs" % "2.0.2" % "findbugs->default",
-      "com.google.code.findbugs" % "jsr305" % "2.0.2" % "findbugs->default"
+      "com.google.code.findbugs" % "findbugs" % "2.0.3" % "findbugs->default",
+      "com.google.code.findbugs" % "jsr305" % "2.0.3" % "findbugs->default"
     ),
       
     findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
@@ -95,14 +97,15 @@ private[findbugs4sbt] trait Settings extends Plugin {
     
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
-    findbugsMiscSettings <<= (findbugsReportType, findbugsEffort, findbugsOnlyAnalyze, findbugsMaxMemory, 
-        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames) map MiscSettings,
+    findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
+        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort) map MiscSettings,
 
     findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
     findbugsReportType := Some(ReportType.Xml),
-    findbugsEffort := Effort.Medium,
-    findbugsReportPath := Some(crossTarget.value / "findbugs" / "findbugs.xml"),
+    findbugsPriority := Priority.Medium,
+    findbugsEffort := Effort.Default,
+    findbugsReportPath := Some(crossTarget.value / "findbugs" / "report.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,

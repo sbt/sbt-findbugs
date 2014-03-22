@@ -2,7 +2,7 @@
 
 This SBT plug-in enables you to analyze your (Java) code with the help of the great **[FindBugs](http://findbugs.sourceforge.net/)** tool. It defines a `findbugs` sbt action for that purpose.
 
-Version 1.2.1 of this plug-in is available for SBT 0.13.x.
+Version 1.3.0 of this plug-in is available for SBT 0.13.x.
 
 ## Getting findbugs4sbt
 
@@ -10,7 +10,7 @@ findbugs4sbt is hosted at the [sbt Community Repository](http://repo.scala-sbt.o
 
 If you want to go bleeding edge, you can also:
 
-    hg clone https://github.com/sbt/findbugs4sbt.git
+    git clone https://github.com/sbt/findbugs4sbt.git
     cd findbugs4sbt 
     sbt publish-local
 
@@ -27,7 +27,7 @@ findbugsSettings
 Also, you have to add the plugin dependency to your project's `./project/plugins.sbt` or the global  `.sbt/plugins/build.sbt`:
 
 ```scala
-addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.2.2")
+addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.3.0")
 ```
 
 The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
@@ -80,12 +80,17 @@ findbugsIncludeFilters := {
 ### `findbugsReportPath`
 * *Description:* Target path of the report file to generate (optional).
 * *Accepts:* any legal file path
-* *Default:* `Some(crossTarget / "findbugs" / "report.xml"`
+* *Default:* `Some(crossTarget.value / "findbugs" / "report.xml")`
+
+### `findbugsPriority`
+* *Description:* Suppress reporting of bugs based on priority.
+* *Accepts:* `Priority.{Relaxed, Low, Medium, High}`
+* *Default:* `Priority.Medium`
 
 ### `findbugsEffort`
-* *Description:* Effort to put into the static analysis.
-* *Accepts:* `ReportType.{Relaxed, Low, Medium, High}`
-* *Default:* `ReportType.Medium`
+* *Description:* Decide how much effort to put into analysis.
+* *Accepts:* `Effort.{Minimum, Default, Maximum}`
+* *Default:* `Effort.Default`
 
 ### `findbugsOnlyAnalyze`
 * *Description:* Optionally, define which packages/classes should be analyzed.

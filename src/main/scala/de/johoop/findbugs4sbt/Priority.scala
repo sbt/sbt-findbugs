@@ -11,20 +11,24 @@
  */
 package de.johoop.findbugs4sbt
 
-object Effort {
+object Priority {
 
-  sealed abstract class Effort
+  sealed abstract class Priority
 
-  case object Minimum extends Effort {
-    override def toString = "min"
+  case object Relaxed extends Priority {
+    override def toString = "-relaxed"
   }
 
-  case object Default extends Effort {
-    override def toString = "default"
+  case object Low extends Priority {
+    override def toString = "-low"
   }
 
-  case object Maximum extends Effort {
-    override def toString = "max"
+  case object Medium extends Priority {
+    override def toString = "-medium"
+  }
+
+  case object High extends Priority {
+    override def toString = "-high"
   }
 
 }
