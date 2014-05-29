@@ -14,7 +14,7 @@ If you want to go bleeding edge, you can also:
     cd findbugs4sbt 
     sbt publish-local
 
-=== Adding findbugs4sbt as a plug-in to your project ===
+### Adding findbugs4sbt as a plug-in to your project
 
 Add the following to your project's `build.sbt` file:
 
