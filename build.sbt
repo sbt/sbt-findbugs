@@ -4,7 +4,7 @@ name := "findbugs4sbt"
 
 organization := "de.johoop"
 
-version := "1.3.0"
+version := "1.4.0"
 
 scalaVersion := "2.10.3"
 

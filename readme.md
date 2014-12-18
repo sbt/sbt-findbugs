@@ -2,7 +2,7 @@
 
 This SBT plug-in enables you to analyze your (Java) code with the help of the great **[FindBugs](http://findbugs.sourceforge.net/)** tool. It defines a `findbugs` sbt action for that purpose.
 
-Version 1.3.0 of this plug-in is available for SBT 0.13.x.
+Version 1.4.0 of this plug-in is available for SBT 0.13.x.
 
 ## Getting findbugs4sbt
 
@@ -27,7 +27,7 @@ findbugsSettings
 Also, you have to add the plugin dependency to your project's `./project/plugins.sbt` or the global  `.sbt/plugins/build.sbt`:
 
 ```scala
-addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.3.0")
+addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.4.0")
 ```
 
 The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
