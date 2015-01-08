@@ -88,8 +88,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
     libraryDependencies ++= Seq(
-      "com.google.code.findbugs" % "findbugs" % "2.0.3" % "findbugs->default",
-      "com.google.code.findbugs" % "jsr305" % "2.0.3" % "findbugs->default"
+      "com.google.code.findbugs" % "findbugs" % "3.0.0" % "findbugs->default",
+      "com.google.code.findbugs" % "jsr305" % "3.0.0" % "findbugs->default"
     ),
       
     findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
