@@ -69,7 +69,7 @@ findbugsIncludeFilters := {
 
 ## Settings
 
-(see also the [FindBugs documentation](http:*findbugs.sourceforge.net/manual/running.html#commandLineOptions))
+(see also the [FindBugs documentation](http://findbugs.sourceforge.net/manual/running.html#commandLineOptions))
 
 ### `findbugsReportType`
 
