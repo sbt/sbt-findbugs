@@ -72,7 +72,6 @@ findbugsIncludeFilters := {
 (see also the [FindBugs documentation](http://findbugs.sourceforge.net/manual/running.html#commandLineOptions))
 
 ### `findbugsReportType`
-
 * *Description:* Optionally selects the output format for the FindBugs report.
 * *Accepts:* `Some(ReportType.{Xml, Html, PlainHtml, FancyHtml, FancyHistHtml, Emacs, Xdoc})`
 * *Default:* `Some(ReportType.Xml)`
@@ -97,7 +96,7 @@ findbugsIncludeFilters := {
 * *Accepts:* An option containing a `List[String]` of packages and classes.
 * *Default:* `None` (meaning: analyze everything).
 
-### `findbugsMaxMemoryInMB`
+### `findbugsMaxMemory`
 * *Description:* Maximum amount of memory to allow for FindBugs (in MB).
 * *Accepts:* any reasonable amount of memory as an integer value
 * *Default:* `1024`
@@ -125,7 +124,7 @@ findbugsIncludeFilters := {
 ### `findbugsAnalyzedPath`
 * *Description:* The path to the classes to be analyzed.
 * *Accepts:* any `sbt.Path`
-* *Default:* `mainCompilePath`
+* *Default:* `Seq(classDirectory in Compile value)`
 
 ## Contributors
 
