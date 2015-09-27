@@ -24,9 +24,37 @@ object FindBugsCheck extends Plugin
     IO.withTemporaryDirectory { filterPath =>
       val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
       streams.log.debug("FindBugs command line to execute: \"%s\"" format (cmd mkString " "))
-      executeCommandLine(cmd, javaHome, streams.log)
+      val result = executeCommandLine(cmd, javaHome, streams.log)
 
-      println("Findbugs Check EXECUTED!")
+      streams.log.info("Will fail the build if errors are found in Findbugs report.")
+      var issuesFound = 0
+      val outputFile: File = paths.reportPath.get
+      val report = scala.xml.XML.loadFile(outputFile)
+
+      (report \ "BugInstance").foreach { bugInstance =>
+
+        val category: String = (bugInstance \"@category").text
+        val shortMessage: String = (bugInstance \ "ShortMessage").text
+
+        (bugInstance \ "SourceLine").foreach { sourceLine =>
+          val sourcePath: String = (sourceLine \ "@sourcepath").text
+          val lineNumber: String = (sourceLine \ "@start").text
+
+          streams.log.warn("[%s] %s at %s:%s".format(
+              category,
+              shortMessage,
+              sourcePath,
+              lineNumber
+            )
+          )
+          issuesFound += 1
+        }
+      }
+
+      if (issuesFound > 0) {
+        streams.log.error(issuesFound + " issue(s) found in Findbugs report: " + outputFile + "")
+        sys.exit(1)
+      }
     }
   }
 
