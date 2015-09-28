@@ -38,6 +38,8 @@ You can execute `findbugs` to analyze your project and produce a report.
 
 You can execute `findbugs-check` to analyze your project, produce an XML report and automatically break the build if issues are found.
 
+You can also execute `findbugs-gui` to display Findbugs GUI. If you previously generated a report, it will be automatically loaded.
+
 ## Defining exclude/include filters
 
 ### Defining filters inline
