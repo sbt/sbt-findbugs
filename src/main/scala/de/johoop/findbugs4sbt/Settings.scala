@@ -35,7 +35,11 @@ private[findbugs4sbt] case class MiscSettings(
 private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
+<<<<<<< HEAD
   val findbugsGui = TaskKey[Unit]("findbugs-gui")
+=======
+  val findbugsCheck = TaskKey[Unit]("findbugs-check")
+>>>>>>> redmart/master
 
   val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
@@ -95,6 +99,9 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
     findbugs <<= (findbugsClasspath, managedClasspath in Compile,
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map FindBugs.findbugsTask,
+
+    findbugsCheck <<= (findbugsClasspath, managedClasspath in Compile,
+      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map FindBugsCheck.findbugsTask,
 
     findbugsGui <<= (findbugsClasspath, managedClasspath in Compile,
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams, unmanagedSources in Compile) map FindBugsGui.task,
