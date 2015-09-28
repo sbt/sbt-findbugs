@@ -59,7 +59,7 @@ findbugsIncludeFilters := Some(<FindBugsFilter>
 You can also read the filter settings from files in a more conventional way:
 
 ```scala
-findbugsIncludeFilters := Some(baseDirectory.value / "findbugs-include-filters.xml")
+findbugsIncludeFilters := Some(scala.xml.XML.loadFile(baseDirectory.value / "findbugs-include-filters.xml"))
 ```
 
 Or, when your configuration is zipped and previously published to a local repo:
