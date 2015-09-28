@@ -22,7 +22,13 @@ object FindBugsCheck extends Plugin
       streams: TaskStreams): Unit = {
 
     IO.withTemporaryDirectory { filterPath =>
-      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
+
+      streams.log.info("Task 'findbugs-check' will produce XML output.")
+
+      val customMisc = MiscSettings(Some(ReportType.Xml), misc.priority, misc.onlyAnalyze, misc.maxMemory, misc.analyzeNestedArchives,
+        misc.sortReportByClassNames, misc.effort)
+
+      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, customMisc, streams)
       streams.log.debug("FindBugs command line to execute: \"%s\"" format (cmd mkString " "))
       val result = executeCommandLine(cmd, javaHome, streams.log)
 
