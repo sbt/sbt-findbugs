@@ -35,6 +35,7 @@ private[findbugs4sbt] case class MiscSettings(
 private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
+  val findbugsCheck = TaskKey[Unit]("findbugs-check")
 
   val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
@@ -91,10 +92,13 @@ private[findbugs4sbt] trait Settings extends Plugin {
       "com.google.code.findbugs" % "findbugs" % "3.0.0" % "findbugs->default",
       "com.google.code.findbugs" % "jsr305" % "3.0.0" % "findbugs->default"
     ),
-      
-    findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
-      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map findbugsTask,
-    
+
+    findbugs <<= (findbugsClasspath, managedClasspath in Compile,
+      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map FindBugs.findbugsTask,
+
+    findbugsCheck <<= (findbugsClasspath, managedClasspath in Compile,
+      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map FindBugsCheck.findbugsTask,
+
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
     findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
