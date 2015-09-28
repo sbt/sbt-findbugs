@@ -35,11 +35,8 @@ private[findbugs4sbt] case class MiscSettings(
 private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
-<<<<<<< HEAD
   val findbugsGui = TaskKey[Unit]("findbugs-gui")
-=======
   val findbugsCheck = TaskKey[Unit]("findbugs-check")
->>>>>>> redmart/master
 
   val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
