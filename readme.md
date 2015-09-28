@@ -32,6 +32,12 @@ addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.4.0")
 
 The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
 
+## Executing Findbugs
+
+You can execute `findbugs` to analyze your project and produce a report.
+
+You can execute `findbugs-check` to analyze your project, produce an XML report and automatically break the build if issues are found.
+
 ## Defining exclude/include filters
 
 ### Defining filters inline
