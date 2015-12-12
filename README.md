@@ -111,6 +111,11 @@ findbugsIncludeFilters := {
 * *Accepts:* `true` and `false`
 * *Default:* `false`
 
+### `findbugsFailOnError`
+* *Description:* Whether the build should be failed if there are any reported bug instances.
+* *Accepts:* `true` and `false`
+* *Default:* `false`
+
 ### `findbugsIncludeFilters`
 * *Description:* Optional filter file XML content defining which bug instances to include in the static analysis.
 * *Accepts:* `None` and `Option[Node]`
