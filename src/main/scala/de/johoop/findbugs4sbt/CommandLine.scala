@@ -40,7 +40,7 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def findbugsCallArguments = paths.analyzedPath map (_.getPath)
     
     def findbugsCallOptions = {
-      if (paths.reportPath.isDefined && ! misc.reportType.isDefined) 
+      if (paths.reportPath.isDefined && misc.reportType.isEmpty)
         sys.error("If a report path is defined, a report type is required!")
 
       val auxClasspath = paths.auxPath ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305")) 

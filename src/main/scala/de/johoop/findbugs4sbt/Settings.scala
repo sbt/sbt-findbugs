@@ -30,7 +30,7 @@ private[findbugs4sbt] case class MiscSettings(
   reportType: Option[ReportType], priority: Priority, 
   onlyAnalyze: Option[Seq[String]], maxMemory: Int, 
   analyzeNestedArchives: Boolean, sortReportByClassNames: Boolean,
-  effort: Effort)
+  effort: Effort, failOnError: Boolean)
 
 private[findbugs4sbt] trait Settings extends Plugin {
 
@@ -71,6 +71,9 @@ private[findbugs4sbt] trait Settings extends Plugin {
   /** Whether the reported bug instances should be sorted by class name or not. Defaults to <code>false</code>.*/
   val findbugsSortReportByClassNames = SettingKey[Boolean]("findbugs-sort-report-by-class-names")
 
+  /** Whether to fail the build if errors are found. Defaults to <code>false</code>.*/
+  val findbugsFailOnError = SettingKey[Boolean]("findbugs-fail-on-error")
+
   /** Optional filter file XML content defining which bug instances to include in the static analysis. 
     * <code>None</code> by default. */ 
   val findbugsIncludeFilters = TaskKey[Option[Node]]("findbugs-include-filter")
@@ -79,7 +82,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = TaskKey[Option[Node]]("findbugs-exclude-filter")
 
-  protected def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+  protected def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath,
       paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
       streams: TaskStreams): Unit
 
@@ -91,14 +94,14 @@ private[findbugs4sbt] trait Settings extends Plugin {
       "com.google.code.findbugs" % "findbugs" % "3.0.0" % "findbugs->default",
       "com.google.code.findbugs" % "jsr305" % "3.0.0" % "findbugs->default"
     ),
-      
+
     findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map findbugsTask,
-    
+
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
     findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
-    findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
-        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort) map MiscSettings,
+    findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory,
+        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort, findbugsFailOnError) map MiscSettings,
 
     findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
@@ -109,6 +112,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
+    findbugsFailOnError := false,
     findbugsAnalyzedPath := Seq(classDirectory in Compile value),
     findbugsAuxiliaryPath := (dependencyClasspath in Compile).value.files,
     findbugsOnlyAnalyze := None,
