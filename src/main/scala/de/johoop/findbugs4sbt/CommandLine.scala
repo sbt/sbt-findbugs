@@ -22,7 +22,7 @@ import ReportType._
 import Priority._
 import Effort._
 
-private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
+private[findbugs4sbt] trait CommandLine extends Plugin with Filters {
 
   def commandLine(findbugsClasspath: Classpath, compileClasspath: Classpath, 
       paths: PathSettings, filters: FilterSettings, filterPath: File, misc: MiscSettings, streams: TaskStreams) = {
@@ -45,12 +45,19 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
 
       val auxClasspath = paths.auxPath ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305")) 
       
-      addOnlyAnalyzeParameter(addSortByClassParameter(addFilterFiles(filters, filterPath, 
-        misc.reportType.map(`type` => List(`type`.toString)).getOrElse(Nil) ++
-        paths.reportPath.map(path => List("-output", path.absolutePath)).getOrElse(Nil) ++ List(
-          "-nested:%b".format(misc.analyzeNestedArchives),
-          "-auxclasspath", commandLineClasspath(auxClasspath), misc.priority.toString,
-          "-effort:%s".format(misc.effort.toString)))))
+      addOnlyAnalyzeParameter(
+        addSortByClassParameter(
+          addFilterFiles(
+            filters,
+            filterPath,
+            misc.reportType.map(
+              `type` => List(`type`.toString)).getOrElse(Nil) ++
+              paths.reportPath.map(path => List("-output", path.absolutePath)).getOrElse(Nil) ++
+              List("-nested:%b".format(misc.analyzeNestedArchives),
+                   "-auxclasspath", commandLineClasspath(auxClasspath),
+                   misc.priority.toString,
+                   "-effort:%s".format(misc.effort.toString)
+              ))))
     }
   
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {

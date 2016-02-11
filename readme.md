@@ -32,6 +32,14 @@ addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.4.0")
 
 The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
 
+## Executing Findbugs
+
+You can execute `findbugs` to analyze your project and produce a report.
+
+You can execute `findbugs-check` to analyze your project, produce an XML report and automatically break the build if issues are found.
+
+You can also execute `findbugs-gui` to display Findbugs GUI. If you previously generated a report, it will be automatically loaded.
+
 ## Defining exclude/include filters
 
 ### Defining filters inline
@@ -51,7 +59,7 @@ findbugsIncludeFilters := Some(<FindBugsFilter>
 You can also read the filter settings from files in a more conventional way:
 
 ```scala
-findbugsIncludeFilters := Some(baseDirectory.value / "findbugs-include-filters.xml")
+findbugsIncludeFilters := Some(scala.xml.XML.loadFile(baseDirectory.value / "findbugs-include-filters.xml"))
 ```
 
 Or, when your configuration is zipped and previously published to a local repo:
