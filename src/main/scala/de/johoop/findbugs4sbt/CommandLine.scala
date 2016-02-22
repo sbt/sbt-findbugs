@@ -14,9 +14,10 @@ package de.johoop.findbugs4sbt
 import sbt._
 import sbt.Keys._
 
+import scala.io.Source
 import scala.xml.Node
 
-import java.io.File
+import java.io.{PrintWriter, File}
 
 import ReportType._
 import Priority._
@@ -24,7 +25,7 @@ import Effort._
 
 private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Settings {
 
-  def commandLine(findbugsClasspath: Classpath, compileClasspath: Classpath, 
+  def commandLine(findbugsPluginList: Seq[String], findbugsClasspath: Classpath, compileClasspath: Classpath,
       paths: PathSettings, filters: FilterSettings, filterPath: File, misc: MiscSettings, streams: TaskStreams) = {
     
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
@@ -32,13 +33,13 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
     def findbugsJavaCall = {
       val classpath = commandLineClasspath(findbugsClasspath.files)
       streams.log.debug("FindBugs classpath: %s" format classpath)
-  
+
       List("-Xmx%dm".format(misc.maxMemory),
           "-cp", classpath, "edu.umd.cs.findbugs.LaunchAppropriateUI", "-textui")
     }
 
     def findbugsCallArguments = paths.analyzedPath map (_.getPath)
-    
+
     def findbugsCallOptions = {
       if (paths.reportPath.isDefined && ! misc.reportType.isDefined) 
         sys.error("If a report path is defined, a report type is required!")
@@ -50,7 +51,8 @@ private[findbugs4sbt] trait CommandLine extends Plugin with Filters with Setting
         paths.reportPath.map(path => List("-output", path.absolutePath)).getOrElse(Nil) ++ List(
           "-nested:%b".format(misc.analyzeNestedArchives),
           "-auxclasspath", commandLineClasspath(auxClasspath), misc.priority.toString,
-          "-effort:%s".format(misc.effort.toString)))))
+          "-effort:%s".format(misc.effort.toString),
+          "-pluginList", findbugsPluginList.mkString(":")))))
     }
   
     def addOnlyAnalyzeParameter(arguments: List[String]) = misc.onlyAnalyze match {

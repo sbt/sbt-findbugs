@@ -36,6 +36,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
 
   val findbugs = TaskKey[Unit]("findbugs")
 
+  val findbugsPluginList = TaskKey[Seq[String]]("findbugs-plugin-list")
   val findbugsClasspath = TaskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = TaskKey[PathSettings]("findbugs-path-settings")
   val findbugsFilterSettings = TaskKey[FilterSettings]("findbugs-filter-settings")
@@ -79,8 +80,8 @@ private[findbugs4sbt] trait Settings extends Plugin {
     * <code>None</code> by default. */ 
   val findbugsExcludeFilters = TaskKey[Option[Node]]("findbugs-exclude-filter")
 
-  protected def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
-      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
+  protected def findbugsTask(findbugsPluginList: Seq[String], findbugsClasspath: Classpath, compileClasspath: Classpath,
+      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File],
       streams: TaskStreams): Unit
 
   private val findbugsConfig = config("findbugs") hide
@@ -92,7 +93,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
       "com.google.code.findbugs" % "jsr305" % "3.0.0" % "findbugs->default"
     ),
       
-    findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
+    findbugs <<= (findbugsPluginList, findbugsClasspath, managedClasspath in Compile,
       findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map findbugsTask,
     
     findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
@@ -100,6 +101,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
         findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort) map MiscSettings,
 
+    findbugsPluginList := Seq(),
     findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
 
     findbugsReportType := Some(ReportType.Xml),
