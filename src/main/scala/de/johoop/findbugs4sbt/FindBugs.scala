@@ -17,12 +17,12 @@ import Keys._
 object FindBugs extends Plugin 
     with Settings with CommandLine with CommandLineExecutor {
 
-  override def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
-      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
+  override def findbugsTask(findbugsPluginList: Seq[String], findbugsClasspath: Classpath, compileClasspath: Classpath,
+      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File],
       streams: TaskStreams): Unit = {
 
     IO.withTemporaryDirectory { filterPath =>
-      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
+      val cmd = commandLine(findbugsPluginList, findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
       streams.log.debug("FindBugs command line to execute: \"%s\"" format (cmd mkString " "))
       executeCommandLine(cmd, javaHome, streams.log)
     }
