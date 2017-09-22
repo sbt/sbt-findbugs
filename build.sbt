@@ -1,7 +1,7 @@
 name := "sbt-findbugs"
 organization := "org.scala-sbt"
 
-version := "2.0.0-M1"
+version := "2.0.0-M2-SNAPSHOT"
 
 sbtPlugin := true
 crossSbtVersions := Seq("0.13.16", "1.0.2")

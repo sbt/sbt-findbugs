@@ -14,9 +14,9 @@ package org.scalasbt.findbugs
 
 import java.io.File
 
-import org.scalasbt.findbugs.Effort._
-import org.scalasbt.findbugs.Priority.Priority
-import org.scalasbt.findbugs.ReportType._
+import org.scalasbt.findbugs.settings.FindBugsEffort.FindBugsEffort
+import org.scalasbt.findbugs.settings.FindBugsPriority.FindBugsPriority
+import org.scalasbt.findbugs.settings.FindBugsReport._
 import sbt._
 
 import scala.xml.Node
@@ -26,13 +26,13 @@ private[findbugs] case class PathSettings(reportPath: Option[File], analyzedPath
 private[findbugs] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
 
 private[findbugs] case class MiscSettings(
-    reportType: Option[ReportType],
-    priority: Priority,
+    reportType: Option[FindBugsReport],
+    priority: FindBugsPriority,
     onlyAnalyze: Option[Seq[String]],
     maxMemory: Int,
     analyzeNestedArchives: Boolean,
     sortReportByClassNames: Boolean,
-    effort: Effort)
+    effort: FindBugsEffort)
 
 object FindBugsKeys extends FindBugsKeys
 
@@ -54,13 +54,13 @@ trait FindBugsKeys {
   val findbugsAuxiliaryPath = taskKey[Seq[File]]("findbugs-auxiliary-path")
 
   /** Type of report to create. Defaults to <code>Some(ReportType.Xml)</code>. */
-  val findbugsReportType = settingKey[Option[ReportType]]("findbugs-report-type")
+  val findbugsReportType = settingKey[Option[FindBugsReport]]("findbugs-report-type")
 
   /** Priority of bugs shown. Defaults to <code>Priority.Medium</code>. */
-  val findbugsPriority = settingKey[Priority]("findbugs-priority")
+  val findbugsPriority = settingKey[FindBugsPriority]("findbugs-priority")
 
   /** Effort put into bug finding. Defaults to <code>Effort.Default</code> */
-  val findbugsEffort = settingKey[Effort]("findbugs-effort")
+  val findbugsEffort = settingKey[FindBugsEffort]("findbugs-effort")
 
   /** Optionally, define which packages/classes should be analyzed (<code>None</code> by default) */
   val findbugsOnlyAnalyze = settingKey[Option[Seq[String]]]("findbugs-only-analyze")
@@ -81,4 +81,9 @@ trait FindBugsKeys {
   /** Optional filter file XML content defining which bug instances to exclude in the static analysis.
     * <code>None</code> by default. */
   val findbugsExcludeFilters = taskKey[Option[Node]]("findbugs-exclude-filter")
+
+  // type aliases for auto import
+  val FindBugsEffort: settings.FindBugsEffort.type = settings.FindBugsEffort
+  val FindBugsPriority: settings.FindBugsPriority.type = settings.FindBugsPriority
+  val FindBugsReport: settings.FindBugsReport.type = settings.FindBugsReport
 }

@@ -50,9 +50,9 @@ object FindBugsPlugin extends AutoPlugin {
       findbugsSortReportByClassNames.value,
       findbugsEffort.value
     ),
-    findbugsReportType := Some(ReportType.Xml),
-    findbugsPriority := Priority.Medium,
-    findbugsEffort := Effort.Default,
+    findbugsReportType := Some(FindBugsReport.Xml),
+    findbugsPriority := settings.FindBugsPriority.Medium,
+    findbugsEffort := settings.FindBugsEffort.Default,
     findbugsReportPath := Some(crossTarget.value / "findbugs" / "report.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
