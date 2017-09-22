@@ -16,21 +16,20 @@ import sbt._
 
 import scala.xml.{Node, XML}
 
-private[findbugs4sbt] trait Filters {
+private[findbugs4sbt] object Filters {
 
-  private[findbugs4sbt] def addFilterFiles(filters: FilterSettings, filterPath: File, options: List[String]) = {
+  def addFilterFiles(filters: FilterSettings, filterPath: File, options: List[String]): List[String] = {
     def addIncludeFilterFile(options: List[String]) = addFilterFile(options, filters.includeFilters, "include")
     def addExcludeFilterFile(options: List[String]) = addFilterFile(options, filters.excludeFilters, "exclude")
 
-    def addFilterFile(options: List[String], maybeFilters: Option[Node], kindOfFilter: String) = {
-      options ++ (maybeFilters match {
-        case Some(filters) => {
+    def addFilterFile(options: List[String], maybeFilters: Option[Node], kindOfFilter: String): List[String] = {
+      options ++ maybeFilters
+        .map({ f =>
           val filterFile = (filterPath / "%sFilterFile.xml".format(kindOfFilter.capitalize)).getAbsolutePath
-          XML.save(filterFile, filters, "UTF-8")
-          List("-%s".format(kindOfFilter), filterFile)
-        }
-        case None => Nil
-      })
+          XML.save(filterFile, f, "UTF-8")
+          List(s"-$kindOfFilter", filterFile)
+        })
+        .getOrElse(Nil)
     }
 
     addExcludeFilterFile(addIncludeFilterFile(options))
