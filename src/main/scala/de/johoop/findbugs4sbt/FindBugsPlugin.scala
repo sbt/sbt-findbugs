@@ -16,7 +16,7 @@ import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin
 
-object FindBugs extends AutoPlugin with CommandLine with CommandLineExecutor {
+object FindBugsPlugin extends AutoPlugin {
 
   object autoImport extends FindBugsKeys
 
@@ -25,29 +25,13 @@ object FindBugs extends AutoPlugin with CommandLine with CommandLineExecutor {
   override def requires: Plugins = JvmPlugin
   override def trigger: PluginTrigger = allRequirements
 
-  def findbugsTask(
-      findbugsClasspath: Classpath,
-      compileClasspath: Classpath,
-      paths: PathSettings,
-      filters: FilterSettings,
-      misc: MiscSettings,
-      javaHome: Option[File],
-      streams: TaskStreams): Unit = {
-
-    IO.withTemporaryDirectory { filterPath =>
-      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
-      streams.log.debug("FindBugs command line to execute: \"%s\"" format (cmd mkString " "))
-      executeCommandLine(cmd, javaHome, streams.log)
-    }
-  }
-
   override def projectSettings: Seq[Setting[_]] = Seq(
     ivyConfigurations += FindbugsConfig,
     libraryDependencies ++= Seq(
       "com.google.code.findbugs" % "findbugs" % "3.0.1" % "findbugs->default",
       "com.google.code.findbugs" % "jsr305" % "3.0.1" % "findbugs->default"
     ),
-    findbugs := findbugsTask(
+    findbugs := FindBugsRunner.runFindBugs(
       findbugsClasspath.value,
       (managedClasspath in Compile).value,
       findbugsPathSettings.value,

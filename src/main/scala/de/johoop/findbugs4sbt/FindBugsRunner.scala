@@ -14,19 +14,38 @@ package de.johoop.findbugs4sbt
 
 import java.io.File
 
-import sbt.Keys._
+import sbt.Keys.{Classpath, TaskStreams}
 import sbt._
 
-private[findbugs4sbt] trait CommandLine extends Filters {
+import scala.util.control.NonFatal
 
-  def commandLine(
-      findbugsClasspath: Classpath,
-      compileClasspath: Classpath,
-      paths: PathSettings,
-      filters: FilterSettings,
-      filterPath: File,
-      misc: MiscSettings,
-      streams: TaskStreams) = {
+object FindBugsRunner {
+
+  def runFindBugs(
+    findbugsClasspath: Classpath,
+    compileClasspath: Classpath,
+    paths: PathSettings,
+    filters: FilterSettings,
+    misc: MiscSettings,
+    javaHome: Option[File],
+    streams: TaskStreams
+  ): Unit = {
+    IO.withTemporaryDirectory { filterPath =>
+      val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
+      FindBugsRunner.executeCommandLine(cmd, javaHome, streams.log)
+    }
+  }
+
+  // TODO split
+  // scalastyle:off method.length
+  private def commandLine(
+    findbugsClasspath: Classpath,
+    compileClasspath: Classpath,
+    paths: PathSettings,
+    filters: FilterSettings,
+    filterPath: File,
+    misc: MiscSettings,
+    streams: TaskStreams): List[String] = {
 
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
@@ -40,14 +59,15 @@ private[findbugs4sbt] trait CommandLine extends Filters {
     def findbugsCallArguments = paths.analyzedPath map (_.getPath)
 
     def findbugsCallOptions = {
-      if (paths.reportPath.isDefined && !misc.reportType.isDefined)
+      if (paths.reportPath.isDefined && misc.reportType.isEmpty) {
         sys.error("If a report path is defined, a report type is required!")
+      }
 
       val auxClasspath = paths.auxPath ++ (findbugsClasspath.files filter (_.getName startsWith "jsr305"))
 
       addOnlyAnalyzeParameter(
         addSortByClassParameter(
-          addFilterFiles(
+          Filters.addFilterFiles(
             filters,
             filterPath,
             misc.reportType.map(`type` => List(`type`.toString)).getOrElse(Nil) ++
@@ -79,5 +99,17 @@ private[findbugs4sbt] trait CommandLine extends Filters {
     paths.reportPath foreach (path => IO.createDirectory(path.getParentFile))
 
     findbugsCommandLine
+  }
+
+
+  private def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger): Unit = {
+    try {
+      val exitValue =
+        Fork.java(ForkOptions(javaHome = javaHome, outputStrategy = Some(LoggedOutput(log))), commandLine)
+      if (exitValue != 0) sys.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
+
+    } catch {
+      case NonFatal(e) => sys.error("Exception while executing FindBugs: %s".format(e.getMessage))
+    }
   }
 }
