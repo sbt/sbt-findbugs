@@ -20,15 +20,14 @@ import sbt._
 import scala.util.control.NonFatal
 
 object FindBugsRunner {
-
   def runFindBugs(
-    findbugsClasspath: Classpath,
-    compileClasspath: Classpath,
-    paths: PathSettings,
-    filters: FilterSettings,
-    misc: MiscSettings,
-    javaHome: Option[File],
-    streams: TaskStreams
+      findbugsClasspath: Classpath,
+      compileClasspath: Classpath,
+      paths: PathSettings,
+      filters: FilterSettings,
+      misc: MiscSettings,
+      javaHome: Option[File],
+      streams: TaskStreams
   ): Unit = {
     IO.withTemporaryDirectory { filterPath =>
       val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
@@ -39,13 +38,13 @@ object FindBugsRunner {
   // TODO split
   // scalastyle:off method.length
   private def commandLine(
-    findbugsClasspath: Classpath,
-    compileClasspath: Classpath,
-    paths: PathSettings,
-    filters: FilterSettings,
-    filterPath: File,
-    misc: MiscSettings,
-    streams: TaskStreams): List[String] = {
+      findbugsClasspath: Classpath,
+      compileClasspath: Classpath,
+      paths: PathSettings,
+      filters: FilterSettings,
+      filterPath: File,
+      misc: MiscSettings,
+      streams: TaskStreams): List[String] = {
 
     def findbugsCommandLine = findbugsJavaCall ++ findbugsCallOptions ++ findbugsCallArguments
 
@@ -100,7 +99,6 @@ object FindBugsRunner {
 
     findbugsCommandLine
   }
-
 
   private def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger): Unit = {
     try {

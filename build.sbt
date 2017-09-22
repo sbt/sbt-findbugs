@@ -12,6 +12,10 @@ scalacOptions ++= Seq(
   "-Ywarn-adapted-args",
   "-Ywarn-dead-code")
 
+libraryDependencies ++= Seq(
+  "com.google.code.findbugs" % "findbugs" % "3.0.1"
+)
+
 licenses += (("Eclipse Public License v1.0", url("http://www.eclipse.org/legal/epl-v10.html")))
 headerLicense := Some(HeaderLicense.Custom(
   """|This file is part of findbugs4sbt
