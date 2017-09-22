@@ -26,13 +26,8 @@ object FindBugsPlugin extends AutoPlugin {
   override def trigger: PluginTrigger = allRequirements
 
   override def projectSettings: Seq[Setting[_]] = Seq(
-    ivyConfigurations += FindbugsConfig,
-    libraryDependencies ++= Seq(
-      "com.google.code.findbugs" % "findbugs" % "3.0.1" % "findbugs->default",
-      "com.google.code.findbugs" % "jsr305" % "3.0.1" % "findbugs->default"
-    ),
     findbugs := FindBugsRunner.runFindBugs(
-      findbugsClasspath.value,
+      findBugsClasspath.value,
       (managedClasspath in Compile).value,
       findbugsPathSettings.value,
       findbugsFilterSettings.value,
@@ -44,7 +39,7 @@ object FindBugsPlugin extends AutoPlugin {
     findbugsPathSettings := PathSettings(
       findbugsReportPath.value,
       findbugsAnalyzedPath.value,
-      findbugsAuxiliaryPath.value), //.dependsOn(compile in Compile),
+      findbugsAuxiliaryPath.value),
     findbugsFilterSettings := FilterSettings(findbugsIncludeFilters.value, findbugsExcludeFilters.value),
     findbugsMiscSettings := MiscSettings(
       findbugsReportType.value,
@@ -55,7 +50,6 @@ object FindBugsPlugin extends AutoPlugin {
       findbugsSortReportByClassNames.value,
       findbugsEffort.value
     ),
-    findbugsClasspath := Classpaths.managedJars(FindbugsConfig, classpathTypes.value, update.value),
     findbugsReportType := Some(ReportType.Xml),
     findbugsPriority := Priority.Medium,
     findbugsEffort := Effort.Default,
@@ -69,4 +63,9 @@ object FindBugsPlugin extends AutoPlugin {
     findbugsIncludeFilters := None,
     findbugsExcludeFilters := None
   )
+
+  private lazy val findBugsClasspath = Def.task {
+    // TODO is this the best way?
+    Project.extract(state.value).currentUnit.unit.plugins.fullClasspath
+  }
 }

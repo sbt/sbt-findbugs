@@ -12,16 +12,14 @@
 
 package de.johoop.findbugs4sbt
 
-import sbt._
-import Keys._
-import Project.Initialize
+import java.io.File
 
-import ReportType._
-import Priority._
-import Effort._
+import de.johoop.findbugs4sbt.Effort._
+import de.johoop.findbugs4sbt.Priority._
+import de.johoop.findbugs4sbt.ReportType._
+import sbt._
 
 import scala.xml.Node
-import java.io.File
 
 private[findbugs4sbt] case class PathSettings(reportPath: Option[File], analyzedPath: Seq[File], auxPath: Seq[File])
 
@@ -42,7 +40,6 @@ trait FindBugsKeys {
 
   val findbugs = taskKey[Unit]("findbugs")
 
-  val findbugsClasspath = taskKey[Classpath]("findbugs-classpath")
   val findbugsPathSettings = taskKey[PathSettings]("findbugs-path-settings")
   val findbugsFilterSettings = taskKey[FilterSettings]("findbugs-filter-settings")
   val findbugsMiscSettings = taskKey[MiscSettings]("findbugs-misc-settings")
@@ -84,8 +81,4 @@ trait FindBugsKeys {
   /** Optional filter file XML content defining which bug instances to exclude in the static analysis.
     * <code>None</code> by default. */
   val findbugsExcludeFilters = taskKey[Option[Node]]("findbugs-exclude-filter")
-
-  // TODO needed?
-  val FindbugsConfig = config("findbugs").hide
-
 }
