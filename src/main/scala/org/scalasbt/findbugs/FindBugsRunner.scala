@@ -1,5 +1,5 @@
 /*
- * This file is part of findbugs4sbt
+ * This file is part of sbt-findbugs
  *
  * Copyright (c) Joachim Hofer & contributors
  * All rights reserved.
@@ -10,7 +10,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package de.johoop.findbugs4sbt
+package org.scalasbt.findbugs
 
 import java.io.File
 

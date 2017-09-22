@@ -1,5 +1,5 @@
-name := "findbugs4sbt"
-organization := "de.johoop"
+name := "sbt-findbugs"
+organization := "org.scala-sbt"
 
 version := "2.0.0-SNAPSHOT"
 
@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 
 licenses += (("Eclipse Public License v1.0", url("http://www.eclipse.org/legal/epl-v10.html")))
 headerLicense := Some(HeaderLicense.Custom(
-  """|This file is part of findbugs4sbt
+  """|This file is part of sbt-findbugs
      |
      |Copyright (c) Joachim Hofer & contributors
      |All rights reserved.
