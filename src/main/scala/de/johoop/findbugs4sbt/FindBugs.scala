@@ -12,10 +12,18 @@
 
 package de.johoop.findbugs4sbt
 
+import sbt.Keys._
 import sbt._
-import Keys._
+import sbt.plugins.JvmPlugin
 
-object FindBugs extends Plugin with FindBugsKeys with CommandLine with CommandLineExecutor {
+object FindBugs extends AutoPlugin with CommandLine with CommandLineExecutor {
+
+  object autoImport extends FindBugsKeys
+
+  import autoImport._
+
+  override def requires: Plugins = JvmPlugin
+  override def trigger: PluginTrigger = allRequirements
 
   def findbugsTask(
       findbugsClasspath: Classpath,
@@ -33,7 +41,7 @@ object FindBugs extends Plugin with FindBugsKeys with CommandLine with CommandLi
     }
   }
 
-  val findbugsSettings = Seq(
+  override def projectSettings: Seq[Setting[_]] = Seq(
     ivyConfigurations += FindbugsConfig,
     libraryDependencies ++= Seq(
       "com.google.code.findbugs" % "findbugs" % "3.0.1" % "findbugs->default",
