@@ -10,22 +10,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt.findbugs
+package org.scalasbt.findbugs.settings
 
-object Effort {
+object FindBugsPriority {
+  sealed abstract class FindBugsPriority(val arg: String)
 
-  sealed abstract class Effort
-
-  case object Minimum extends Effort {
-    override def toString = "min"
-  }
-
-  case object Default extends Effort {
-    override def toString = "default"
-  }
-
-  case object Maximum extends Effort {
-    override def toString = "max"
-  }
-
+  case object Relaxed extends FindBugsPriority("-relaxed")
+  case object Low extends FindBugsPriority("-low")
+  case object Medium extends FindBugsPriority("-medium")
+  case object High extends FindBugsPriority("-high")
 }

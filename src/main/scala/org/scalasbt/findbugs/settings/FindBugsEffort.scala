@@ -10,16 +10,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt.findbugs
+package org.scalasbt.findbugs.settings
 
-object ReportType extends Enumeration {
-  type ReportType = Value
+object FindBugsEffort {
+  sealed abstract class FindBugsEffort(val value: String)
 
-  val Xml = Value("-xml")
-  val Html = Value("-html")
-  val PlainHtml = Value("-html:plain.xsl")
-  val FancyHtml = Value("-html:fancy.xsl")
-  val FancyHistHtml = Value("-html:fancy-hist.xsl")
-  val Emacs = Value("-emacs")
-  val Xdoc = Value("-xdocs")
+  case object Minimum extends FindBugsEffort("min")
+  case object Default extends FindBugsEffort("default")
+  case object Maximum extends FindBugsEffort("max")
 }

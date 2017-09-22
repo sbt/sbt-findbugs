@@ -1,0 +1,7 @@
+> findbugs
+
+# should have compiled source
+$ exists target/scala-2.11/classes
+
+# and generated a report
+$ exists target/scala-2.11/findbugs/report.xml

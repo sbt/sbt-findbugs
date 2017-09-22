@@ -69,13 +69,13 @@ object FindBugsRunner {
           Filters.addFilterFiles(
             filters,
             filterPath,
-            misc.reportType.map(`type` => List(`type`.toString)).getOrElse(Nil) ++
+            misc.reportType.map(t => List(t.arg)).getOrElse(Nil) ++
               paths.reportPath.map(path => List("-output", path.absolutePath)).getOrElse(Nil) ++ List(
               "-nested:%b".format(misc.analyzeNestedArchives),
               "-auxclasspath",
               commandLineClasspath(auxClasspath),
-              misc.priority.toString,
-              "-effort:%s".format(misc.effort.toString)
+              misc.priority.arg,
+              "-effort:%s".format(misc.effort.value)
             )
           )))
     }
