@@ -21,7 +21,7 @@ private[findbugs4sbt] trait Filters extends Plugin with Settings {
 
   private[findbugs4sbt] def addFilterFiles(filters: FilterSettings, filterPath: File, options: List[String]) = {
     def addIncludeFilterFile(options: List[String]) = addFilterFile(options, filters.includeFilters, "include")
-    def addExcludeFilterFile(options: List[String]) = addFilterFile(options, filters.excludeFilters, "exclude") 
+    def addExcludeFilterFile(options: List[String]) = addFilterFile(options, filters.excludeFilters, "exclude")
 
     def addFilterFile(options: List[String], maybeFilters: Option[Node], kindOfFilter: String) = {
       options ++ (maybeFilters match {

@@ -14,7 +14,7 @@ package de.johoop.findbugs4sbt
 
 object ReportType extends Enumeration {
   type ReportType = Value
-  
+
   val Xml = Value("-xml")
   val Html = Value("-html")
   val PlainHtml = Value("-html:plain.xsl")
@@ -23,4 +23,3 @@ object ReportType extends Enumeration {
   val Emacs = Value("-emacs")
   val Xdoc = Value("-xdocs")
 }
-

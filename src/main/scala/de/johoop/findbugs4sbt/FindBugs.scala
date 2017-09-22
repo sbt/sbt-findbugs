@@ -15,11 +15,15 @@ package de.johoop.findbugs4sbt
 import sbt._
 import Keys._
 
-object FindBugs extends Plugin 
-    with Settings with CommandLine with CommandLineExecutor {
+object FindBugs extends Plugin with Settings with CommandLine with CommandLineExecutor {
 
-  override def findbugsTask(findbugsClasspath: Classpath, compileClasspath: Classpath, 
-      paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
+  override def findbugsTask(
+      findbugsClasspath: Classpath,
+      compileClasspath: Classpath,
+      paths: PathSettings,
+      filters: FilterSettings,
+      misc: MiscSettings,
+      javaHome: Option[File],
       streams: TaskStreams): Unit = {
 
     IO.withTemporaryDirectory { filterPath =>
