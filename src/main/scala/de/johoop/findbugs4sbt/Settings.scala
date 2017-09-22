@@ -83,7 +83,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
       paths: PathSettings, filters: FilterSettings, misc: MiscSettings, javaHome: Option[File], 
       streams: TaskStreams): Unit
 
-  private val findbugsConfig = config("findbugs") hide
+  private val findbugsConfig = config("findbugs").hide
   
   val findbugsSettings = Seq(
     ivyConfigurations += findbugsConfig,
@@ -91,16 +91,29 @@ private[findbugs4sbt] trait Settings extends Plugin {
       "com.google.code.findbugs" % "findbugs" % "3.0.1" % "findbugs->default",
       "com.google.code.findbugs" % "jsr305" % "3.0.1" % "findbugs->default"
     ),
-      
-    findbugs <<= (findbugsClasspath, managedClasspath in Compile, 
-      findbugsPathSettings, findbugsFilterSettings, findbugsMiscSettings, javaHome, streams) map findbugsTask,
-    
-    findbugsPathSettings <<= (findbugsReportPath, findbugsAnalyzedPath, findbugsAuxiliaryPath) map PathSettings dependsOn (compile in Compile),
-    findbugsFilterSettings <<= (findbugsIncludeFilters, findbugsExcludeFilters) map FilterSettings,
-    findbugsMiscSettings <<= (findbugsReportType, findbugsPriority, findbugsOnlyAnalyze, findbugsMaxMemory, 
-        findbugsAnalyzeNestedArchives, findbugsSortReportByClassNames, findbugsEffort) map MiscSettings,
 
-    findbugsClasspath := Classpaths managedJars (findbugsConfig, classpathTypes value, update value),
+    findbugs := findbugsTask(findbugsClasspath.value,
+      (managedClasspath in Compile).value,
+      findbugsPathSettings.value,
+      findbugsFilterSettings.value,
+      findbugsMiscSettings.value,
+      javaHome.value,
+      streams.value),
+
+    findbugsPathSettings := PathSettings(findbugsReportPath.value,
+      findbugsAnalyzedPath.value,
+      findbugsAuxiliaryPath.value), //.dependsOn(compile in Compile),
+
+    findbugsFilterSettings := FilterSettings(findbugsIncludeFilters.value, findbugsExcludeFilters.value),
+    findbugsMiscSettings := MiscSettings(findbugsReportType.value,
+      findbugsPriority.value,
+      findbugsOnlyAnalyze.value,
+      findbugsMaxMemory.value,
+      findbugsAnalyzeNestedArchives.value,
+      findbugsSortReportByClassNames.value,
+      findbugsEffort.value),
+
+    findbugsClasspath := Classpaths.managedJars(findbugsConfig, classpathTypes.value, update.value),
 
     findbugsReportType := Some(ReportType.Xml),
     findbugsPriority := Priority.Medium,
@@ -109,7 +122,7 @@ private[findbugs4sbt] trait Settings extends Plugin {
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,
     findbugsSortReportByClassNames := false,
-    findbugsAnalyzedPath := Seq(classDirectory in Compile value),
+    findbugsAnalyzedPath := Seq((classDirectory in Compile).value),
     findbugsAuxiliaryPath := (dependencyClasspath in Compile).value.files,
     findbugsOnlyAnalyze := None,
     findbugsIncludeFilters := None,
