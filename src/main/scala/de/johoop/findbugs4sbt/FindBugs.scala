@@ -56,6 +56,7 @@ object FindBugs extends AutoPlugin with CommandLine with CommandLineExecutor {
       javaHome.value,
       streams.value
     ),
+    findbugs := findbugs.dependsOn(compile in Compile).value,
     findbugsPathSettings := PathSettings(
       findbugsReportPath.value,
       findbugsAnalyzedPath.value,
