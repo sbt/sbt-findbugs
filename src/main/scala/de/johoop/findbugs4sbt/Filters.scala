@@ -14,10 +14,9 @@ package de.johoop.findbugs4sbt
 
 import sbt._
 
-import scala.xml.Node
-import scala.xml.XML
+import scala.xml.{Node, XML}
 
-private[findbugs4sbt] trait Filters extends Plugin with FindBugsKeys {
+private[findbugs4sbt] trait Filters {
 
   private[findbugs4sbt] def addFilterFiles(filters: FilterSettings, filterPath: File, options: List[String]) = {
     def addIncludeFilterFile(options: List[String]) = addFilterFile(options, filters.includeFilters, "include")

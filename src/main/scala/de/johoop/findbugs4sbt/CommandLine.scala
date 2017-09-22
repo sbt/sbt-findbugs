@@ -12,18 +12,12 @@
 
 package de.johoop.findbugs4sbt
 
-import sbt._
-import sbt.Keys._
-
-import scala.xml.Node
-
 import java.io.File
 
-import ReportType._
-import Priority._
-import Effort._
+import sbt.Keys._
+import sbt._
 
-private[findbugs4sbt] trait CommandLine extends Plugin with Filters with FindBugsKeys {
+private[findbugs4sbt] trait CommandLine extends Filters {
 
   def commandLine(
       findbugsClasspath: Classpath,
