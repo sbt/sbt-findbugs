@@ -1,7 +1,7 @@
 /*
- * This file is part of findbugs4sbt.
- * 
- * Copyright (c) 2010-2014 Joachim Hofer & contributors
+ * This file is part of findbugs4sbt
+ *
+ * Copyright (c) Joachim Hofer & contributors
  * All rights reserved.
  *
  * This program and the accompanying materials
@@ -9,6 +9,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
+
 package de.johoop.findbugs4sbt
 
 object Priority {
