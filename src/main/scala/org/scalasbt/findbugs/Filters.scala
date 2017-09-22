@@ -1,5 +1,5 @@
 /*
- * This file is part of findbugs4sbt
+ * This file is part of sbt-findbugs
  *
  * Copyright (c) Joachim Hofer & contributors
  * All rights reserved.
@@ -10,13 +10,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package de.johoop.findbugs4sbt
+package org.scalasbt.findbugs
 
 import sbt._
 
 import scala.xml.{Node, XML}
 
-private[findbugs4sbt] object Filters {
+private[findbugs] object Filters {
 
   def addFilterFiles(filters: FilterSettings, filterPath: File, options: List[String]): List[String] = {
     def addIncludeFilterFile(options: List[String]) = addFilterFile(options, filters.includeFilters, "include")
