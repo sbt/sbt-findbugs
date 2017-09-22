@@ -4,6 +4,8 @@ organization := "org.scala-sbt"
 version := "2.0.0-SNAPSHOT"
 
 sbtPlugin := true
+crossSbtVersions := Seq("0.13.16", "1.0.2")
+
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",

@@ -102,10 +102,20 @@ object FindBugsRunner {
 
   private def executeCommandLine(commandLine: List[String], javaHome: Option[File], log: Logger): Unit = {
     try {
-      val exitValue =
-        Fork.java(ForkOptions(javaHome = javaHome, outputStrategy = Some(LoggedOutput(log))), commandLine)
-      if (exitValue != 0) sys.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
+      val forkOptions = ForkOptions(
+        javaHome,
+        Some(LoggedOutput(log)),
+        Vector.empty[File],
+        None,
+        Vector.empty[String],
+        connectInput = false,
+        Map.empty[String, String])
 
+      val exitValue = Fork.java(forkOptions, commandLine)
+
+      if (exitValue != 0) {
+        sys.error("Nonzero exit value when attempting to call FindBugs: " + exitValue)
+      }
     } catch {
       case NonFatal(e) => sys.error("Exception while executing FindBugs: %s".format(e.getMessage))
     }
