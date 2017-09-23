@@ -36,20 +36,6 @@ object FindBugsPlugin extends AutoPlugin {
       streams.value
     ),
     findbugs := findbugs.dependsOn(compile in Compile).value,
-    findbugsPathSettings := PathSettings(
-      findbugsReportPath.value,
-      findbugsAnalyzedPath.value,
-      findbugsAuxiliaryPath.value),
-    findbugsFilterSettings := FilterSettings(findbugsIncludeFilters.value, findbugsExcludeFilters.value),
-    findbugsMiscSettings := MiscSettings(
-      findbugsReportType.value,
-      findbugsPriority.value,
-      findbugsOnlyAnalyze.value,
-      findbugsMaxMemory.value,
-      findbugsAnalyzeNestedArchives.value,
-      findbugsSortReportByClassNames.value,
-      findbugsEffort.value
-    ),
     findbugsReportType := Some(FindBugsReport.Xml),
     findbugsPriority := settings.FindBugsPriority.Medium,
     findbugsEffort := settings.FindBugsEffort.Default,
@@ -63,6 +49,29 @@ object FindBugsPlugin extends AutoPlugin {
     findbugsIncludeFilters := None,
     findbugsExcludeFilters := None
   )
+
+  private lazy val findbugsFilterSettings = Def.task {
+    FilterSettings(findbugsIncludeFilters.value, findbugsExcludeFilters.value)
+  }
+
+  private lazy val findbugsMiscSettings = Def.task {
+    MiscSettings(
+      findbugsReportType.value,
+      findbugsPriority.value,
+      findbugsOnlyAnalyze.value,
+      findbugsMaxMemory.value,
+      findbugsAnalyzeNestedArchives.value,
+      findbugsSortReportByClassNames.value,
+      findbugsEffort.value
+    )
+  }
+
+  private lazy val findbugsPathSettings = Def.task {
+    PathSettings(
+      findbugsReportPath.value,
+      findbugsAnalyzedPath.value,
+      findbugsAuxiliaryPath.value)
+  }
 
   private lazy val findBugsClasspath = Def.task {
     // TODO is this the best way?
