@@ -37,50 +37,29 @@ private[findbugs] case class MiscSettings(
 object FindBugsKeys extends FindBugsKeys
 
 trait FindBugsKeys {
+  val findbugs = taskKey[Unit]("Run FindBugs analysis")
 
-  val findbugs = taskKey[Unit]("findbugs")
+  val findbugsReportPath = settingKey[Option[File]]("Output path for FindBugs reports")
 
-  val findbugsPathSettings = taskKey[PathSettings]("findbugs-path-settings")
-  val findbugsFilterSettings = taskKey[FilterSettings]("findbugs-filter-settings")
-  val findbugsMiscSettings = taskKey[MiscSettings]("findbugs-misc-settings")
+  val findbugsAnalyzedPath = taskKey[Seq[File]]("The path to the classes to be analyzed")
+  val findbugsAuxiliaryPath =
+    taskKey[Seq[File]]("The path to the classes not to be analyzed but referenced by analyzed ones")
 
-  /** Output path for FindBugs reports. Defaults to <code>Some(crossTarget / "findbugs" / "findbugs.xml")</code>. */
-  val findbugsReportPath = settingKey[Option[File]]("findbugs-report-path")
+  val findbugsReportType = settingKey[Option[FindBugsReport]]("Type of report to create")
+  val findbugsPriority = settingKey[FindBugsPriority]("Priority of bugs shown")
+  val findbugsEffort = settingKey[FindBugsEffort]("Effort put into bug finding. ")
+  val findbugsOnlyAnalyze = settingKey[Option[Seq[String]]]("Whitelist of packages/classes that should be analyzed")
+  val findbugsMaxMemory = settingKey[Int]("Maximum memory to allocate to FindBugs (in MB)")
+  val findbugsAnalyzeNestedArchives = settingKey[Boolean]("Whether FindBugs should analyze nested archives or not")
 
-  /** The path to the classes to be analyzed. Defaults to <code>target / classes</code>. */
-  val findbugsAnalyzedPath = taskKey[Seq[File]]("findbugs-analyzed-path")
+  val findbugsSortReportByClassNames =
+    settingKey[Boolean]("Whether the reported bug instances should be sorted by class name or not")
 
-  /** The path to the classes not to be analyzed but referenced by analyzed ones. Defaults to <code>dependencyClasspath in Compile</code>. */
-  val findbugsAuxiliaryPath = taskKey[Seq[File]]("findbugs-auxiliary-path")
+  val findbugsIncludeFilters =
+    settingKey[Option[Node]]("Filter file XML content defining which bug instances to include in the static analysis")
 
-  /** Type of report to create. Defaults to <code>Some(ReportType.Xml)</code>. */
-  val findbugsReportType = settingKey[Option[FindBugsReport]]("findbugs-report-type")
-
-  /** Priority of bugs shown. Defaults to <code>Priority.Medium</code>. */
-  val findbugsPriority = settingKey[FindBugsPriority]("findbugs-priority")
-
-  /** Effort put into bug finding. Defaults to <code>Effort.Default</code> */
-  val findbugsEffort = settingKey[FindBugsEffort]("findbugs-effort")
-
-  /** Optionally, define which packages/classes should be analyzed (<code>None</code> by default) */
-  val findbugsOnlyAnalyze = settingKey[Option[Seq[String]]]("findbugs-only-analyze")
-
-  /** Maximum amount of memory to allow for FindBugs (in MB). */
-  val findbugsMaxMemory = settingKey[Int]("findbugs-max-memory")
-
-  /** Whether FindBugs should analyze nested archives or not. Defaults to <code>true</code>. */
-  val findbugsAnalyzeNestedArchives = settingKey[Boolean]("findbugs-analyze-nested-archives")
-
-  /** Whether the reported bug instances should be sorted by class name or not. Defaults to <code>false</code>.*/
-  val findbugsSortReportByClassNames = settingKey[Boolean]("findbugs-sort-report-by-class-names")
-
-  /** Optional filter file XML content defining which bug instances to include in the static analysis.
-    * <code>None</code> by default. */
-  val findbugsIncludeFilters = taskKey[Option[Node]]("findbugs-include-filter")
-
-  /** Optional filter file XML content defining which bug instances to exclude in the static analysis.
-    * <code>None</code> by default. */
-  val findbugsExcludeFilters = taskKey[Option[Node]]("findbugs-exclude-filter")
+  val findbugsExcludeFilters =
+    settingKey[Option[Node]]("Filter file XML content defining which bug instances to exclude in the static analysis.")
 
   // type aliases for auto import
   val FindBugsEffort: settings.FindBugsEffort.type = settings.FindBugsEffort
