@@ -2,6 +2,6 @@ name := "simple"
 
 scalaVersion := "2.11.11"
 
-findbugsEffort := FindBugsEffort.Maximum
-findbugsPriority := FindBugsPriority.Relaxed
-findbugsReportType := Some(FindBugsReport.PlainHtml)
+findbugsEffort := FindbugsEffort.Maximum
+findbugsPriority := FindbugsPriority.Relaxed
+findbugsReportType := Some(FindbugsReport.PlainHtml)
