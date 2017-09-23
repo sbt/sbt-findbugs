@@ -16,9 +16,9 @@ import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin
 
-object FindBugsPlugin extends AutoPlugin {
+object FindbugsPlugin extends AutoPlugin {
 
-  object autoImport extends FindBugsKeys
+  object autoImport extends FindbugsKeys
 
   import autoImport._
 
@@ -26,7 +26,7 @@ object FindBugsPlugin extends AutoPlugin {
   override def trigger: PluginTrigger = allRequirements
 
   override def projectSettings: Seq[Setting[_]] = Seq(
-    findbugs := FindBugsRunner.runFindBugs(
+    findbugs := FindbugsRunner.runFindBugs(
       findBugsClasspath.value,
       (managedClasspath in Compile).value,
       findbugsPathSettings.value,
@@ -36,9 +36,9 @@ object FindBugsPlugin extends AutoPlugin {
       streams.value
     ),
     findbugs := findbugs.dependsOn(compile in Compile).value,
-    findbugsReportType := Some(FindBugsReport.Xml),
-    findbugsPriority := settings.FindBugsPriority.Medium,
-    findbugsEffort := settings.FindBugsEffort.Default,
+    findbugsReportType := Some(FindbugsReport.Xml),
+    findbugsPriority := FindbugsPriority.Medium,
+    findbugsEffort := FindbugsEffort.Default,
     findbugsReportPath := Some(crossTarget.value / "findbugs" / "report.xml"),
     findbugsMaxMemory := 1024,
     findbugsAnalyzeNestedArchives := true,

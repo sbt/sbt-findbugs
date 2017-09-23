@@ -14,9 +14,9 @@ package org.scalasbt.findbugs
 
 import java.io.File
 
-import org.scalasbt.findbugs.settings.FindBugsEffort.FindBugsEffort
-import org.scalasbt.findbugs.settings.FindBugsPriority.FindBugsPriority
-import org.scalasbt.findbugs.settings.FindBugsReport._
+import org.scalasbt.findbugs.settings.FindbugsEffort.FindBugsEffort
+import org.scalasbt.findbugs.settings.FindbugsPriority.FindBugsPriority
+import org.scalasbt.findbugs.settings.FindbugsReport._
 import sbt._
 
 import scala.xml.Node
@@ -34,9 +34,9 @@ private[findbugs] case class MiscSettings(
     sortReportByClassNames: Boolean,
     effort: FindBugsEffort)
 
-object FindBugsKeys extends FindBugsKeys
+object FindbugsKeys extends FindbugsKeys
 
-trait FindBugsKeys {
+trait FindbugsKeys {
   val findbugs = taskKey[Unit]("Run FindBugs analysis")
 
   val findbugsReportPath = settingKey[Option[File]]("Output path for FindBugs reports")
@@ -62,7 +62,7 @@ trait FindBugsKeys {
     settingKey[Option[Node]]("Filter file XML content defining which bug instances to exclude in the static analysis.")
 
   // type aliases for auto import
-  val FindBugsEffort: settings.FindBugsEffort.type = settings.FindBugsEffort
-  val FindBugsPriority: settings.FindBugsPriority.type = settings.FindBugsPriority
-  val FindBugsReport: settings.FindBugsReport.type = settings.FindBugsReport
+  val FindbugsEffort: settings.FindbugsEffort.type = settings.FindbugsEffort
+  val FindbugsPriority: settings.FindbugsPriority.type = settings.FindbugsPriority
+  val FindbugsReport: settings.FindbugsReport.type = settings.FindbugsReport
 }

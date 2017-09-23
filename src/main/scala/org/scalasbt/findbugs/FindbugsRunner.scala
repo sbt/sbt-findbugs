@@ -19,7 +19,7 @@ import sbt._
 
 import scala.util.control.NonFatal
 
-object FindBugsRunner {
+object FindbugsRunner {
   def runFindBugs(
       findbugsClasspath: Classpath,
       compileClasspath: Classpath,
@@ -31,7 +31,7 @@ object FindBugsRunner {
   ): Unit = {
     IO.withTemporaryDirectory { filterPath =>
       val cmd = commandLine(findbugsClasspath, compileClasspath, paths, filters, filterPath, misc, streams)
-      FindBugsRunner.executeCommandLine(cmd, javaHome, streams.log)
+      FindbugsRunner.executeCommandLine(cmd, javaHome, streams.log)
     }
   }
 

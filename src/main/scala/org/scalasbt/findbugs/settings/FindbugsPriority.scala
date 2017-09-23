@@ -12,10 +12,11 @@
 
 package org.scalasbt.findbugs.settings
 
-object FindBugsEffort {
-  sealed abstract class FindBugsEffort(val value: String)
+object FindbugsPriority {
+  sealed abstract class FindBugsPriority(val arg: String)
 
-  case object Minimum extends FindBugsEffort("min")
-  case object Default extends FindBugsEffort("default")
-  case object Maximum extends FindBugsEffort("max")
+  case object Relaxed extends FindBugsPriority("-relaxed")
+  case object Low extends FindBugsPriority("-low")
+  case object Medium extends FindBugsPriority("-medium")
+  case object High extends FindBugsPriority("-high")
 }

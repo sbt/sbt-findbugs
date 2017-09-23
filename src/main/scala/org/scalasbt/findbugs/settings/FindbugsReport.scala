@@ -12,7 +12,7 @@
 
 package org.scalasbt.findbugs.settings
 
-object FindBugsReport {
+object FindbugsReport {
   sealed abstract class FindBugsReport(val arg: String)
 
   case object Xml extends FindBugsReport("-xml")
