@@ -15,7 +15,7 @@ package org.scalasbt.findbugs
 import java.io.File
 
 import sbt.Keys.{Classpath, TaskStreams}
-import sbt.{File, _}
+import sbt._
 
 import scala.util.control.NonFatal
 import scala.xml.{Node, XML}
@@ -55,7 +55,7 @@ object FindbugsRunner {
 
     baseCommand(findbugsClasspath, paths, misc) ++
       miscSettingArgs(misc) ++
-      FilterUtils.generateFilterFiles(filters, tmpDir) ++
+      generateFilterFiles(filters, tmpDir) ++
       pathSettingArgs(findbugsClasspath, paths) ++
       analyzedPaths(paths)
   }
