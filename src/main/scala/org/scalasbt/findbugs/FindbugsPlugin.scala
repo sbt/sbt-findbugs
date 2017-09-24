@@ -28,7 +28,6 @@ object FindbugsPlugin extends AutoPlugin {
   override def projectSettings: Seq[Setting[_]] = Seq(
     findbugs := FindbugsRunner.runFindBugs(
       findBugsClasspath.value,
-      (managedClasspath in Compile).value,
       findbugsPathSettings.value,
       findbugsFilterSettings.value,
       findbugsMiscSettings.value,
@@ -67,10 +66,7 @@ object FindbugsPlugin extends AutoPlugin {
   }
 
   private lazy val findbugsPathSettings = Def.task {
-    PathSettings(
-      findbugsReportPath.value,
-      findbugsAnalyzedPath.value,
-      findbugsAuxiliaryPath.value)
+    PathSettings(findbugsReportPath.value, findbugsAnalyzedPath.value, findbugsAuxiliaryPath.value)
   }
 
   private lazy val findBugsClasspath = Def.task {

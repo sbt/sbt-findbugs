@@ -1,7 +1,7 @@
 name := "sbt-findbugs"
 organization := "org.scala-sbt"
 
-version := "2.0.0-M2"
+version := "2.0.0-M3-SNAPSHOT"
 
 sbtPlugin := true
 crossSbtVersions := Seq("0.13.16", "1.0.2")
@@ -15,7 +15,8 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code")
 
 libraryDependencies ++= Seq(
-  "com.google.code.findbugs" % "findbugs" % "3.0.1"
+  "com.google.code.findbugs"  %  "findbugs"   % "3.0.1",
+  "org.scalatest"             %% "scalatest"  % "3.0.4"   % "test"
 )
 
 licenses += (("Eclipse Public License v1.0", url("http://www.eclipse.org/legal/epl-v10.html")))
