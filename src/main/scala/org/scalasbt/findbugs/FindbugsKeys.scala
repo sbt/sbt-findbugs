@@ -21,19 +21,6 @@ import sbt._
 
 import scala.xml.Node
 
-private[findbugs] case class PathSettings(reportPath: Option[File], analyzedPath: Seq[File], auxPath: Seq[File])
-
-private[findbugs] case class FilterSettings(includeFilters: Option[Node], excludeFilters: Option[Node])
-
-private[findbugs] case class MiscSettings(
-    reportType: Option[FindBugsReport],
-    priority: FindBugsPriority,
-    onlyAnalyze: Option[Seq[String]],
-    maxMemory: Int,
-    analyzeNestedArchives: Boolean,
-    sortReportByClassNames: Boolean,
-    effort: FindBugsEffort)
-
 object FindbugsKeys extends FindbugsKeys
 
 trait FindbugsKeys {
