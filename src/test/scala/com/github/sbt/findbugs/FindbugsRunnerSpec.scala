@@ -10,11 +10,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt.findbugs
+package com.github.sbt.findbugs
 
 import java.io.File
 
-import org.scalasbt.findbugs.settings.{FindbugsEffort, FindbugsPriority, FindbugsReport}
+import com.github.sbt.findbugs.settings.{FindbugsEffort, FindbugsPriority, FindbugsReport}
 import org.scalatest.{Matchers, WordSpec}
 import sbt._
 

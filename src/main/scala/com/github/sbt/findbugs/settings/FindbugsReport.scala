@@ -10,7 +10,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt.findbugs.settings
+package com.github.sbt.findbugs.settings
 
 object FindbugsReport {
   sealed abstract class FindBugsReport(val arg: String)

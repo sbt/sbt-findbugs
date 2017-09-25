@@ -10,7 +10,7 @@ This sbt plug-in enables you to analyze your (Java) code with the help of the gr
 Install the plugin by adding the following to `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("org.scala-sbt" % "sbt-findbugs" % "<version>")
+addSbtPlugin("com.github.sbt" % "sbt-findbugs" % "<version>")
 ```
 
 And then run the plugin with `sbt findbugs`. This will generate a FindBugs report in

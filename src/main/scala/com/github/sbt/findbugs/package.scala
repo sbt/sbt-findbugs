@@ -10,13 +10,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt
+package com.github.sbt
 
 import java.io.File
 
-import org.scalasbt.findbugs.settings.FindbugsEffort.FindBugsEffort
-import org.scalasbt.findbugs.settings.FindbugsPriority.FindBugsPriority
-import org.scalasbt.findbugs.settings.FindbugsReport.FindBugsReport
+import com.github.sbt.findbugs.settings.FindbugsEffort.FindBugsEffort
+import com.github.sbt.findbugs.settings.FindbugsPriority.FindBugsPriority
+import com.github.sbt.findbugs.settings.FindbugsReport.FindBugsReport
 import sbt._
 
 import scala.xml.{Node, XML}
