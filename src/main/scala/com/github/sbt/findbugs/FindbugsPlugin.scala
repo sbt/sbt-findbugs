@@ -10,7 +10,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.scalasbt.findbugs
+package com.github.sbt.findbugs
 
 import sbt.Keys._
 import sbt._
