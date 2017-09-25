@@ -1,36 +1,20 @@
-# findbugs4sbt - Static code analysis via FindBugs from within SBT
+# sbt-findbugs - Static code analysis via FindBugs from within sbt
 
-This SBT plug-in enables you to analyze your (Java) code with the help of the great **[FindBugs](http://findbugs.sourceforge.net/)** tool. It defines a `findbugs` sbt action for that purpose.
+[![Build Status](https://travis-ci.org/sbt/sbt-findbugs.svg?branch=master)](https://travis-ci.org/sbt/sbt-findbugs)
+[![SBT 0.13 version](https://img.shields.io/badge/sbt_0.13-2.0.0--M2-blue.svg)](https://bintray.com/stringbean/sbt-plugins/sbt-findbugs)
+[![SBT 1.0 version](https://img.shields.io/badge/sbt_1.0-2.0.0--M2-blue.svg)](https://bintray.com/stringbean/sbt-plugins/sbt-findbugs)
 
-Version 1.4.0 of this plug-in is available for SBT 0.13.x.
+This sbt plug-in enables you to analyze your (Java) code with the help of the great
+[FindBugs](http://findbugs.sourceforge.net/) tool. It defines a `findbugs` sbt action for that purpose.
 
-## Getting findbugs4sbt
-
-findbugs4sbt is hosted at the [sbt Community Repository](http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases). This repository is automatically available from within SBT. This means that you just have to add findbugs4sbt as a plug-in to your project (see the next section).
-
-If you want to go bleeding edge, you can also:
-
-    git clone https://github.com/sbt/findbugs4sbt.git
-    cd findbugs4sbt 
-    sbt publish-local
-
-### Adding findbugs4sbt as a plug-in to your project
-
-Add the following to your project's `build.sbt` file:
+Install the plugin by adding the following to `project/plugins.sbt`:
 
 ```scala
-import de.johoop.findbugs4sbt.FindBugs._
-
-findbugsSettings
+addSbtPlugin("org.scala-sbt" % "sbt-findbugs" % "<version>")
 ```
 
-Also, you have to add the plugin dependency to your project's `./project/plugins.sbt` or the global  `.sbt/plugins/build.sbt`:
-
-```scala
-addSbtPlugin("de.johoop" % "findbugs4sbt" % "1.4.0")
-```
-
-The old settings specified below are still mostly valid, but they're now specified using the settings system of SBT 0.13.
+And then run the plugin with `sbt findbugs`. This will generate a FindBugs report in
+`target/scala-xx/findugs/report.xml`.
 
 ## Defining exclude/include filters
 
@@ -132,8 +116,9 @@ Thanks to [@asflierl](http://github.com/asflierl) and [@anishathalye](http://git
 
 ## License
 
-Copyright (c) 2011 - 2014 Joachim Hofer & contributors
+Copyright (c) Joachim Hofer & contributors
 
 All rights reserved.
 
-This program and the accompanying materials are made available under the terms of the **Eclipse Public License v1.0** which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+This program and the accompanying materials are made available under the terms of the **Eclipse Public License v1.0**
+which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
