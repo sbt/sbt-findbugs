@@ -1,7 +1,7 @@
 name := "sbt-findbugs"
 organization := "com.github.sbt"
 
-version := "2.0.0-M4"
+version := "2.0.0"
 
 sbtPlugin := true
 crossSbtVersions := Seq("0.13.16", "1.0.2")
