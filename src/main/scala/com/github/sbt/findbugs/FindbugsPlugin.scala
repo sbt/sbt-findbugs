@@ -20,7 +20,7 @@ object FindbugsPlugin extends AutoPlugin {
 
   object autoImport extends FindbugsKeys
 
-  import autoImport._
+  import autoImport._ // scalastyle:ignore import.grouping
 
   override def requires: Plugins = JvmPlugin
   override def trigger: PluginTrigger = allRequirements

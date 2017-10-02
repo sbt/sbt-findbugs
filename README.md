@@ -1,6 +1,7 @@
 # sbt-findbugs - Static code analysis via FindBugs from within sbt
 
 [![Build Status](https://travis-ci.org/sbt/sbt-findbugs.svg?branch=master)](https://travis-ci.org/sbt/sbt-findbugs)
+[![Codacy Grade](https://img.shields.io/codacy/grade/c5bcab37c4a04974b06a1cfd3f5a9fcc.svg?label=codacy)](https://www.codacy.com/app/stringbean/sbt-findbugs)
 [![SBT 0.13 version](https://img.shields.io/badge/sbt_0.13-2.0.0-blue.svg)](https://bintray.com/stringbean/sbt-plugins/sbt-findbugs)
 [![SBT 1.0 version](https://img.shields.io/badge/sbt_1.0-2.0.0-blue.svg)](https://bintray.com/stringbean/sbt-plugins/sbt-findbugs)
 
