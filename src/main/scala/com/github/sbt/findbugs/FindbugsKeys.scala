@@ -49,7 +49,9 @@ trait FindbugsKeys {
     settingKey[Option[Node]]("Filter file XML content defining which bug instances to exclude in the static analysis.")
 
   // type aliases for auto import
+  // scalastyle:off field.name
   val FindbugsEffort: settings.FindbugsEffort.type = settings.FindbugsEffort
   val FindbugsPriority: settings.FindbugsPriority.type = settings.FindbugsPriority
   val FindbugsReport: settings.FindbugsReport.type = settings.FindbugsReport
+  // scalastyle:on
 }
