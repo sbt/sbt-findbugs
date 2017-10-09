@@ -58,8 +58,8 @@ findbugsIncludeFilters := {
 
 ### `findbugsReportType`
 * *Description:* Optionally selects the output format for the FindBugs report.
-* *Accepts:* `Some(ReportType.{Xml, Html, PlainHtml, FancyHtml, FancyHistHtml, Emacs, Xdoc})`
-* *Default:* `Some(ReportType.Xml)`
+* *Accepts:* `Some(FindbugsReportType.{Xml, Html, PlainHtml, FancyHtml, FancyHistHtml, Emacs, Xdoc})`
+* *Default:* `Some(FindbugsReportType.Xml)`
 
 ### `findbugsReportPath`
 * *Description:* Target path of the report file to generate (optional).
@@ -68,13 +68,13 @@ findbugsIncludeFilters := {
 
 ### `findbugsPriority`
 * *Description:* Suppress reporting of bugs based on priority.
-* *Accepts:* `Priority.{Relaxed, Low, Medium, High}`
-* *Default:* `Priority.Medium`
+* *Accepts:* `FindbugsPriority.{Relaxed, Low, Medium, High}`
+* *Default:* `FindbugsPriority.Medium`
 
 ### `findbugsEffort`
 * *Description:* Decide how much effort to put into analysis.
-* *Accepts:* `Effort.{Minimum, Default, Maximum}`
-* *Default:* `Effort.Default`
+* *Accepts:* `FindbugsEffort.{Minimum, Default, Maximum}`
+* *Default:* `FindbugsEffort.Default`
 
 ### `findbugsOnlyAnalyze`
 * *Description:* Optionally, define which packages/classes should be analyzed.
